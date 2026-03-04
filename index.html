@@ -11,44 +11,44 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
-/* ── DESIGN TOKENS ── */
+/* ── DESIGN TOKENS — dark grey (default) ── */
 :root {
-  --bg:        #080d0c;
-  --surface:   rgba(255,255,255,.04);
-  --surface2:  rgba(255,255,255,.07);
-  --border:    rgba(255,255,255,.07);
-  --border2:   rgba(255,255,255,.13);
-  --text:      #dff0eb;
-  --text2:     #7aa898;
-  --muted:     #3d5e55;
+  --bg:        #111111;
+  --surface:   #1c1c1c;
+  --surface2:  #242424;
+  --border:    #2e2e2e;
+  --border2:   #3a3a3a;
+  --text:      #f0f0f0;
+  --text2:     #a0a0a0;
+  --muted:     #555555;
   --accent:    #2dd4bf;
   --accent2:   #14b8a6;
   --accent-l:  rgba(45,212,191,.10);
   --radius:    12px;
   --radius-sm: 7px;
-  --shadow:    0 2px 16px rgba(0,0,0,.45);
-  --shadow-md: 0 8px 40px rgba(0,0,0,.55);
-  --grid-c:    rgba(45,212,191,.04);
-  --glow1:     rgba(45,212,191,.12);
-  --glow2:     rgba(20,184,166,.06);
+  --shadow:    0 2px 16px rgba(0,0,0,.5);
+  --shadow-md: 0 8px 40px rgba(0,0,0,.6);
+  --grid-c:    rgba(255,255,255,.028);
+  --glow1:     rgba(45,212,191,.08);
+  --glow2:     rgba(20,184,166,.04);
 }
 body.light {
-  --bg:        #f0f9f7;
+  --bg:        #f8fafc;
   --surface:   #ffffff;
-  --surface2:  rgba(0,0,0,.035);
-  --border:    rgba(0,0,0,.07);
-  --border2:   rgba(0,0,0,.12);
+  --surface2:  #f1f5f9;
+  --border:    #e8edf2;
+  --border2:   #d4dbe3;
   --text:      #0c1c19;
   --text2:     #3d5e55;
-  --muted:     #7aa898;
+  --muted:     #94a3b8;
   --accent:    #0d9488;
   --accent2:   #0f766e;
   --accent-l:  rgba(13,148,136,.09);
-  --shadow:    0 2px 12px rgba(0,0,0,.07);
-  --shadow-md: 0 8px 32px rgba(0,0,0,.10);
-  --grid-c:    rgba(13,148,136,.07);
-  --glow1:     rgba(13,148,136,.10);
-  --glow2:     rgba(20,184,166,.04);
+  --shadow:    0 2px 12px rgba(0,0,0,.06);
+  --shadow-md: 0 8px 32px rgba(0,0,0,.08);
+  --grid-c:    rgba(13,148,136,.09);
+  --glow1:     rgba(13,148,136,.06);
+  --glow2:     rgba(20,184,166,.03);
 }
 
 body {
@@ -63,11 +63,18 @@ body {
 /* ── BACKGROUND: grid + soft glow ── */
 .bg-layer {
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  /* grid lines */
   background-image:
     linear-gradient(var(--grid-c) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-c) 1px, transparent 1px);
   background-size: 56px 56px;
+}
+body.light .bg-layer {
+  background-image:
+    linear-gradient(rgba(13,148,136,.11) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13,148,136,.11) 1px, transparent 1px),
+    radial-gradient(circle, rgba(13,148,136,.18) 1px, transparent 1px);
+  background-size: 64px 64px, 64px 64px, 64px 64px;
+  background-position: 0 0, 0 0, -1px -1px;
 }
 /* glow on top of grid */
 .bg-layer::after {
@@ -83,11 +90,11 @@ body {
   position: sticky; top: 0; z-index: 100;
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 32px; height: 56px;
-  background: rgba(8,13,12,.85);
+  background: rgba(17,17,17,.9);
   border-bottom: 1px solid var(--border);
   backdrop-filter: blur(14px);
 }
-body.light .navbar { background: rgba(240,244,255,.88); }
+body.light .navbar { background: rgba(248,250,252,.92); }
 
 .nav-logo { display: flex; align-items: center; gap: 10px; }
 .nav-brand {
@@ -192,11 +199,11 @@ body.light .tool-card { background: #fff; box-shadow: var(--shadow); }
 /* ══════════════ HOW-TO SECTION ══════════════ */
 .how-section {
   position: relative; z-index: 1;
-  background: rgba(255,255,255,.018);
+  background: rgba(255,255,255,.015);
   border-top: 1px solid var(--border);
   padding: 80px 32px 100px;
 }
-body.light .how-section { background: rgba(0,0,0,.018); border-top-color: rgba(0,0,0,.06); }
+body.light .how-section { background: rgba(0,0,0,.012); border-top-color: var(--border); }
 .how-inner { max-width: 720px; margin: 0 auto; }
 
 .how-heading { text-align: center; margin-bottom: 52px; }
@@ -257,6 +264,10 @@ body.light .how-card-head { background: rgba(13,148,136,.04); }
 .info-block-label.req  span { background: rgba(245,158,11,.12);  color: #fbbf24; }
 .info-block-label.fmt  span { background: rgba(139,92,246,.12);  color: #a78bfa; }
 .info-block-label.out  span { background: rgba(34,197,94,.12);   color: #4ade80; }
+body.light .info-block-label.what span { background: rgba(59,130,246,.1);  color: #2563eb; }
+body.light .info-block-label.req  span { background: rgba(245,158,11,.1);  color: #b45309; }
+body.light .info-block-label.fmt  span { background: rgba(139,92,246,.1);  color: #7c3aed; }
+body.light .info-block-label.out  span { background: rgba(34,197,94,.1);   color: #15803d; }
 
 .tag-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
 .tag {
@@ -268,6 +279,15 @@ body.light .how-card-head { background: rgba(13,148,136,.04); }
 .tag.amber  { background: rgba(245,158,11,.1);  border-color: rgba(245,158,11,.3);  color: #fbbf24; }
 .tag.red    { background: rgba(239,68,68,.1);   border-color: rgba(239,68,68,.3);   color: #f87171; }
 .tag.purple { background: rgba(139,92,246,.1);  border-color: rgba(139,92,246,.3);  color: #a78bfa; }
+body.light .tag.green  { color: #15803d; border-color: rgba(34,197,94,.4); }
+body.light .tag.amber  { color: #92400e; border-color: rgba(245,158,11,.4); }
+body.light .tag.red    { color: #b91c1c; border-color: rgba(239,68,68,.4); }
+body.light .tag.purple { color: #6d28d9; border-color: rgba(139,92,246,.4); }
+body.light .tag.blue   { color: var(--accent); }
+.hl-green { color: #4ade80; }
+.hl-red   { color: #f87171; }
+body.light .hl-green { color: #15803d; }
+body.light .hl-red   { color: #b91c1c; }
 
 .how-card-footer { padding: 18px 26px 24px; border-top: 1px solid var(--border); }
 .open-btn {
@@ -442,8 +462,8 @@ body.light .how-card-head { background: rgba(13,148,136,.04); }
         <div class="info-block">
           <div class="info-block-label out"><span>What You Get</span></div>
           <p>A 2–3 sheet Excel export (.xlsx):</p>
-          <p><strong style="color:#4ade80;">"RFM Report" sheet</strong> — full comparison table with all RFM columns plus matched PO data: Item Req No, Make, Part No, Description, Scope, Section, Customer, OR No, Project Qty, PO Qty, PO No, Supplier, Used Qty, Return Qty, % Returned, Unit Price, Total Amt Returned. Each row is colour-coded by match status.</p>
-          <p><strong style="color:#4ade80;">"Summary" sheet</strong> — project KPIs with auto-calculated cost percentages. <strong style="color:#f87171;">"Unmatched Parts" sheet</strong> — only included when RFM contains parts with no matching PO entry, flagging what was returned but never ordered.</p>
+          <p><strong class="hl-green">"RFM Report" sheet</strong> — full comparison table with all RFM columns plus matched PO data: Item Req No, Make, Part No, Description, Scope, Section, Customer, OR No, Project Qty, PO Qty, PO No, Supplier, Used Qty, Return Qty, % Returned, Unit Price, Total Amt Returned. Each row is colour-coded by match status.</p>
+          <p><strong class="hl-green">"Summary" sheet</strong> — project KPIs with auto-calculated cost percentages. <strong class="hl-red">"Unmatched Parts" sheet</strong> — only included when RFM contains parts with no matching PO entry, flagging what was returned but never ordered.</p>
           <div class="tag-row">
             <span class="tag green">RFM Report sheet</span>
             <span class="tag green">Summary sheet</span>

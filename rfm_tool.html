@@ -20,29 +20,28 @@
   --shadow-md:0 4px 16px rgba(15,23,42,.1);
 }
 
-/* ── DARK MODE — indigo/glass palette ── */
+/* ── DARK MODE — charcoal/grey palette ── */
 body.dark {
-  --bg:#020818;
-  --surface:rgba(255,255,255,.04);
-  --surface2:rgba(255,255,255,.07);
-  --border:rgba(255,255,255,.08);
-  --border2:rgba(255,255,255,.12);
-  --text:#f1f5f9;
-  --text2:#cbd5e1;
-  --muted:rgba(255,255,255,.35);
+  --bg:#111111;
+  --surface:#1c1c1c;
+  --surface2:#242424;
+  --border:#2e2e2e;
+  --border2:#3a3a3a;
+  --text:#f0f0f0;
+  --text2:#b0b0b0;
+  --muted:#666666;
   --accent:#818cf8;
   --accent-d:#6366f1;
-  --accent-l:rgba(99,102,241,.15);
-  --shadow:0 1px 3px rgba(0,0,0,.4);
-  --shadow-md:0 4px 20px rgba(0,0,0,.5);
+  --accent-l:rgba(99,102,241,.13);
+  --shadow:0 1px 3px rgba(0,0,0,.5);
+  --shadow-md:0 4px 20px rgba(0,0,0,.6);
 }
-body.dark { background: #020818; }
+body.dark { background: #111111; }
 body.dark::before {
   content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
   background:
-    radial-gradient(ellipse 70% 50% at 20% 20%, rgba(99,102,241,.14) 0%, transparent 55%),
-    radial-gradient(ellipse 50% 50% at 80% 80%, rgba(168,85,247,.09) 0%, transparent 50%),
-    radial-gradient(ellipse 40% 40% at 60% 5%,  rgba(59,130,246,.08) 0%, transparent 40%);
+    radial-gradient(ellipse 60% 40% at 15% 10%, rgba(99,102,241,.06) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 30% at 85% 90%, rgba(99,102,241,.04) 0%, transparent 50%);
 }
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -77,13 +76,14 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 .s1-inner{width:100%;max-width:740px;display:flex;flex-direction:column;gap:16px;}
 .s1-file-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .s1-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow);backdrop-filter:blur(12px);transition:border-color .2s;}
-body.dark .s1-panel{box-shadow:0 4px 24px rgba(0,0,0,.3);}
+body.dark .s1-panel{box-shadow:0 4px 24px rgba(0,0,0,.4);}
 .s1-panel:hover{border-color:var(--border2);}
 .panel-title{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:800;color:var(--text);margin-bottom:4px;letter-spacing:-.01em;}
 .panel-sub{font-size:.72rem;color:var(--text2);line-height:1.5;}
 
 /* ── UPLOAD ZONE ── */
-.upload-zone{border:1.5px dashed var(--border2);border-radius:var(--radius-sm);padding:22px 16px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface2);}
+.upload-zone{border:1.5px dashed var(--border2);border-radius:var(--radius-sm);padding:32px 16px;min-height:110px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;}
+.upload-zone.drag-over{border-color:var(--accent);background:var(--accent-l);transform:scale(1.01);box-shadow:0 0 0 3px rgba(99,102,241,.15);}
 .upload-zone:hover{border-color:var(--accent);background:var(--accent-l);}
 .uz-icon{font-size:1.8rem;display:block;margin-bottom:6px;}
 .uz-text{font-size:.82rem;font-weight:600;color:var(--text2);margin-bottom:4px;}
@@ -101,8 +101,8 @@ body.dark .s1-panel{box-shadow:0 4px 24px rgba(0,0,0,.3);}
 .proj-field{border:1px solid var(--border2);border-radius:var(--radius-sm);padding:9px 12px;font-family:'IBM Plex Sans',sans-serif;font-size:.85rem;color:var(--text);background:var(--surface2);outline:none;width:100%;transition:all .2s;line-height:1.4;}
 .proj-field:focus{border-color:var(--accent);background:var(--accent-l);box-shadow:0 0 0 3px rgba(99,102,241,.12);}
 .proj-field::placeholder{color:var(--muted);opacity:.6;}
-body.dark .proj-field{background:rgba(255,255,255,.05);}
-body.dark .proj-field:focus{background:rgba(99,102,241,.1);}
+body.dark .proj-field{background:var(--surface2);}
+body.dark .proj-field:focus{background:rgba(99,102,241,.08);}
 
 /* ── FOOTER ── */
 .s1-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 24px;background:var(--surface);border-top:1px solid var(--border);flex-shrink:0;position:relative;z-index:1;backdrop-filter:blur(12px);}
@@ -119,7 +119,7 @@ body.dark .proj-field:focus{background:rgba(99,102,241,.1);}
 .btn-success:disabled{opacity:.4;cursor:not-allowed;}
 .btn-danger-outline{background:transparent;color:var(--danger);border-color:#fca5a5;font-size:.68rem;padding:4px 8px;}
 .btn-danger-outline:hover{background:#fef2f2;}
-.btn-lg{padding:10px 24px;font-size:.84rem;}
+.btn-lg{padding:12px 30px;font-size:.9rem;font-weight:700;letter-spacing:.02em;}
 .btn-full{width:100%;justify-content:center;}
 
 /* ── SCREEN 2 ── */
@@ -137,7 +137,7 @@ body.dark .proj-field:focus{background:rgba(99,102,241,.1);}
 .section-badge{font-size:.65rem;font-weight:700;background:var(--accent-l);color:var(--accent);border-radius:100px;padding:2px 9px;}
 .viz-table{width:100%;border-collapse:collapse;font-size:.76rem;}
 .viz-table th{background:#1e3a5f;color:#e2e8f0;font-size:.66rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:8px 10px;text-align:left;white-space:nowrap;position:sticky;top:0;z-index:2;}
-body.dark .viz-table th{background:rgba(99,102,241,.4);}
+body.dark .viz-table th{background:#2a2a2a;}
 .viz-table td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:middle;}
 .viz-table tr:hover td{background:var(--accent-l);}
 .td-mono{font-family:'IBM Plex Mono',monospace;font-size:.72rem;font-weight:500;color:#1e3a5f;}
@@ -149,6 +149,49 @@ body.dark .td-mono{color:#a5b4fc;}
 .pill-excess{background:#dcfce7;color:#15803d;border:1px solid #86efac;}
 .pill-no-po{background:#f1f5f9;color:#64748b;border:1px solid #cbd5e1;}
 .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px;color:var(--muted);font-size:.82rem;text-align:center;gap:10px;}
+
+/* ── FILTER BAR ── */
+.filter-bar{display:flex;align-items:center;gap:8px;padding:10px 20px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap;}
+.filter-btn{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--border2);border-radius:100px;padding:4px 13px;font-size:.72rem;font-weight:600;color:var(--text2);background:var(--surface2);cursor:pointer;transition:all .15s;}
+.filter-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-l);}
+.filter-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.filter-count{font-size:.65rem;opacity:.75;}
+.filter-search{flex:1;min-width:160px;max-width:260px;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:5px 11px;font-size:.78rem;font-family:inherit;color:var(--text);background:var(--surface2);outline:none;transition:all .2s;}
+.filter-search:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(99,102,241,.1);}
+.clear-filters-btn{margin-left:auto;font-size:.68rem;color:var(--muted);background:none;border:none;cursor:pointer;font-family:inherit;text-decoration:underline;padding:0;}
+.clear-filters-btn:hover{color:var(--accent);}
+
+/* ── FILE ERROR ── */
+.file-error{background:#fef2f2;border:1px solid #fca5a5;border-radius:6px;padding:8px 12px;font-size:.72rem;color:#dc2626;display:flex;align-items:flex-start;gap:6px;}
+.file-warn{background:#fffbeb;border:1px solid #fcd34d;border-radius:6px;padding:8px 12px;font-size:.72rem;color:#92400e;display:flex;align-items:flex-start;gap:6px;}
+
+/* ── TOGGLE SWITCH ── */
+.toggle-rows{display:flex;gap:10px;flex-wrap:wrap;}
+.toggle-row{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;user-select:none;transition:all .18s;flex:1;min-width:200px;}
+.toggle-row:hover{border-color:var(--accent-d);background:var(--accent-l);}
+.toggle-row.tog-on{border-color:var(--accent);background:var(--accent-l);}
+body.dark .toggle-row.tog-on{background:rgba(99,102,241,.1);}
+.toggle-info{flex:1;}
+.toggle-label{font-size:.79rem;font-weight:600;color:var(--text);line-height:1.3;}
+.toggle-desc{font-size:.67rem;color:var(--muted);margin-top:2px;line-height:1.35;}
+.tog-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.toggle-track{position:relative;width:38px;height:22px;border-radius:100px;background:var(--border2);transition:background .2s,border-color .2s;border:1.5px solid var(--border2);}
+.toggle-track.track-on{background:var(--accent);border-color:var(--accent);}
+.toggle-thumb{position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.25);transition:transform .18s;}
+.toggle-track.track-on .toggle-thumb{transform:translateX(16px);}
+.tog-badge{font-size:.62rem;font-weight:700;border-radius:4px;padding:2px 7px;min-width:26px;text-align:center;}
+.tog-badge.badge-on{background:#dcfce7;color:#15803d;border:1px solid #86efac;}
+.tog-badge.badge-off{background:var(--surface2);color:var(--muted);border:1px solid var(--border2);}
+
+/* ── FOOTER INLINE TOGGLES ── */
+.footer-toggle{display:inline-flex;align-items:center;gap:7px;padding:5px 10px 5px 8px;border:1px solid var(--border2);border-radius:var(--radius-sm);cursor:pointer;user-select:none;transition:all .18s;background:var(--surface2);}
+.footer-toggle:hover{border-color:var(--accent);background:var(--accent-l);}
+.footer-toggle.tog-on{border-color:rgba(99,102,241,.4);background:var(--accent-l);}
+body.dark .footer-toggle.tog-on{background:rgba(99,102,241,.1);}
+.footer-tog-label{font-size:.72rem;font-weight:600;color:var(--text2);white-space:nowrap;}
+.footer-toggle .toggle-track{width:30px;height:17px;}
+.footer-toggle .toggle-thumb{width:12px;height:12px;}
+.footer-toggle .toggle-track.track-on .toggle-thumb{transform:translateX(13px);}
 
 /* ── SCREEN 3 ── */
 .s3-layout{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:12px;padding:32px;}
@@ -196,12 +239,14 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:9px 
         <div class="s1-panel">
           <div>
             <div class="panel-title">📋 RFM File</div>
-            <div class="panel-sub">Return Mat Slip · Part No col C · Data row 13</div>
+            <div class="panel-sub">Return Mat Slip · headers auto-detected</div>
           </div>
           <input type="file" id="rfmInput" accept=".xls,.xlsx,.xlsb" style="display:none;" onchange="handleRFM(this)">
-          <div id="rfmEmptyZone" class="upload-zone" onclick="document.getElementById('rfmInput').click()">
+          <div id="rfmEmptyZone" class="upload-zone"
+               onclick="document.getElementById('rfmInput').click()"
+               ondragover="dzOver(event,'rfmEmptyZone')" ondragleave="dzLeave('rfmEmptyZone')" ondrop="dzDrop(event,'rfm')">
             <span class="uz-icon">📋</span>
-            <div class="uz-text">Click to upload RFM</div>
+            <div class="uz-text">Click or drag &amp; drop RFM file</div>
             <div class="uz-sub">.xls / .xlsx / .xlsb</div>
           </div>
           <div id="rfmChip" class="file-chip" style="display:none;">
@@ -210,17 +255,21 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:9px 
             <button class="btn btn-danger-outline" onclick="clearRFM()">✕</button>
           </div>
           <div id="rfmPreview" style="display:none;background:#dcfce7;border:1px solid #86efac;border-radius:6px;padding:8px 12px;font-size:.72rem;color:#15803d;"></div>
+          <div id="rfmError" style="display:none;" class="file-error"></div>
+          <div id="rfmWarn" style="display:none;" class="file-warn"></div>
         </div>
 
         <div class="s1-panel">
           <div>
             <div class="panel-title">🧾 PO File</div>
-            <div class="panel-sub">PO_Status · Part No col D · Data row 5</div>
+            <div class="panel-sub">PO_Status · headers auto-detected</div>
           </div>
           <input type="file" id="poInput" accept=".xls,.xlsx,.xlsb" style="display:none;" onchange="handlePO(this)">
-          <div id="poEmptyZone" class="upload-zone" onclick="document.getElementById('poInput').click()">
+          <div id="poEmptyZone" class="upload-zone"
+               onclick="document.getElementById('poInput').click()"
+               ondragover="dzOver(event,'poEmptyZone')" ondragleave="dzLeave('poEmptyZone')" ondrop="dzDrop(event,'po')">
             <span class="uz-icon">🧾</span>
-            <div class="uz-text">Click to upload PO</div>
+            <div class="uz-text">Click or drag &amp; drop PO file</div>
             <div class="uz-sub">.xls / .xlsx / .xlsb</div>
           </div>
           <div id="poChip" class="file-chip" style="display:none;">
@@ -229,6 +278,8 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:9px 
             <button class="btn btn-danger-outline" onclick="clearPO()">✕</button>
           </div>
           <div id="poPreview" style="display:none;background:#ede9fe;border:1px solid #c4b5fd;border-radius:6px;padding:8px 12px;font-size:.72rem;color:#5b21b6;"></div>
+          <div id="poError" style="display:none;" class="file-error"></div>
+          <div id="poWarn" style="display:none;" class="file-warn"></div>
         </div>
       </div>
 
@@ -271,8 +322,27 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:9px 
     </div>
   </div>
   <div class="s1-footer">
-    <span id="s1hint" style="font-size:.78rem;font-weight:500;color:var(--text2);">Upload both RFM and PO files to continue</span>
-    <button class="btn btn-primary btn-lg" id="processBtn" onclick="processData()" disabled>Compare ›</button>
+    <!-- Detection toggles — always visible, no scrolling needed -->
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+      <span style="font-size:.67rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:4px;">Detection</span>
+
+      <div class="footer-toggle tog-on" id="tog-rfm-row" onclick="toggleSetting('autoRFM')" title="Auto-detect RFM header row. OFF = use fixed row 12, col A–G">
+        <div class="toggle-track track-on" id="tog-rfm-track"><div class="toggle-thumb"></div></div>
+        <span class="footer-tog-label">RFM Headers</span>
+        <span class="tog-badge badge-on" id="tog-rfm-badge">ON</span>
+      </div>
+
+      <div class="footer-toggle tog-on" id="tog-po-row" onclick="toggleSetting('autoPO')" title="Auto-detect PO header row. OFF = use fixed row 4, col D/L/O/P/R/AG">
+        <div class="toggle-track track-on" id="tog-po-track"><div class="toggle-thumb"></div></div>
+        <span class="footer-tog-label">PO Headers</span>
+        <span class="tog-badge badge-on" id="tog-po-badge">ON</span>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:12px;margin-left:auto;">
+      <span id="s1hint" style="font-size:.78rem;font-weight:500;color:var(--text2);">Upload both RFM and PO files to continue</span>
+      <button class="btn btn-primary btn-lg" id="processBtn" onclick="processData()" disabled>Compare ›</button>
+    </div>
   </div>
 </div>
 
@@ -287,6 +357,15 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:9px 
       </div>
     </div>
     <div class="stats-bar" id="statsBar"></div>
+    <div class="filter-bar" id="filterBar" style="display:none;">
+      <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">All <span class="filter-count" id="fc-all"></span></button>
+      <button class="filter-btn" data-filter="exact" onclick="setFilter('exact')">✓ Exact <span class="filter-count" id="fc-exact"></span></button>
+      <button class="filter-btn" data-filter="short" onclick="setFilter('short')">↓ Short <span class="filter-count" id="fc-short"></span></button>
+      <button class="filter-btn" data-filter="excess" onclick="setFilter('excess')">↑ Excess <span class="filter-count" id="fc-excess"></span></button>
+      <button class="filter-btn" data-filter="no-po" onclick="setFilter('no-po')">? No PO <span class="filter-count" id="fc-nopo"></span></button>
+      <input class="filter-search" id="filterSearch" type="text" placeholder="Search part no / description…" oninput="applyFilter()">
+      <button class="clear-filters-btn" onclick="resetFilters()">Clear filters</button>
+    </div>
     <div class="s2-content" id="vizContent">
       <div class="empty-state">📋<p>Process data to see comparison</p></div>
     </div>
@@ -321,11 +400,85 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:9px 
     <span style="font-size:.72rem;font-weight:700;font-family:'Syne',sans-serif;color:var(--text);">Workezz</span>
     <span style="font-size:.68rem;color:var(--muted);">— RFM Tracker</span>
   </div>
-  <div style="font-size:.68rem;color:var(--muted);">Designed &amp; built by <strong style="color:var(--text2);">Krish Makwane</strong> &nbsp;·&nbsp; MVP v1.1</div>
+  <div style="font-size:.68rem;color:var(--muted);">Designed &amp; built by <strong style="color:var(--text2);">Krish Makwane</strong> &nbsp;·&nbsp; MVP v1.2 &nbsp;·&nbsp; <button onclick="clearSavedData()" style="background:none;border:none;cursor:pointer;font-size:.68rem;color:var(--muted);text-decoration:underline;font-family:inherit;padding:0;">Clear saved data</button></div>
 </footer>
 
 <script>
 var rfmFile = null, poFile = null, processedData = null;
+var activeFilter = 'all', filterQuery = '';
+
+// ── DETECTION SETTINGS ──
+var detectionSettings = { autoRFM: true, autoPO: true };
+
+function toggleSetting(key) {
+  detectionSettings[key] = !detectionSettings[key];
+  var on = detectionSettings[key];
+  var ids = { autoRFM: 'rfm', autoPO: 'po' };
+  var id = ids[key];
+  var row   = document.getElementById('tog-' + id + '-row');
+  var badge = document.getElementById('tog-' + id + '-badge');
+  var track = document.getElementById('tog-' + id + '-track');
+  row.classList.toggle('tog-on', on);
+  track.classList.toggle('track-on', on);
+  badge.textContent = on ? 'ON' : 'OFF';
+  badge.className = 'tog-badge ' + (on ? 'badge-on' : 'badge-off');
+  try { localStorage.setItem('wz-detect', JSON.stringify(detectionSettings)); } catch(e){}
+}
+
+function loadDetectionSettings() {
+  try {
+    var saved = localStorage.getItem('wz-detect');
+    if (!saved) return;
+    var obj = JSON.parse(saved);
+    Object.keys(obj).forEach(function(k) {
+      if (k in detectionSettings) {
+        detectionSettings[k] = obj[k];
+        if (!obj[k]) {
+          var ids = { autoRFM: 'rfm', autoPO: 'po' };
+          var id = ids[k];
+          if (!id) return;
+          document.getElementById('tog-' + id + '-row').classList.remove('tog-on');
+          document.getElementById('tog-' + id + '-track').classList.remove('track-on');
+          document.getElementById('tog-' + id + '-badge').textContent = 'OFF';
+          document.getElementById('tog-' + id + '-badge').className = 'tog-badge badge-off';
+        }
+      }
+    });
+  } catch(e){}
+}
+
+// ── DRAG & DROP ──
+function dzOver(e, zoneId) {
+  e.preventDefault(); e.stopPropagation();
+  document.getElementById(zoneId).classList.add('drag-over');
+}
+function dzLeave(zoneId) {
+  document.getElementById(zoneId).classList.remove('drag-over');
+}
+function dzDrop(e, type) {
+  e.preventDefault(); e.stopPropagation();
+  var zoneId = type === 'rfm' ? 'rfmEmptyZone' : 'poEmptyZone';
+  document.getElementById(zoneId).classList.remove('drag-over');
+  var file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if (!file) return;
+  var ext = file.name.split('.').pop().toLowerCase();
+  if (!['xls','xlsx','xlsb'].includes(ext)) {
+    showFileMsg(type, 'error', '⚠ Invalid file type. Please upload .xls, .xlsx, or .xlsb');
+    return;
+  }
+  if (type === 'rfm') processRFMFile(file);
+  else processPOFile(file);
+}
+
+function showFileMsg(type, kind, msg) {
+  var errEl  = document.getElementById(type + 'Error');
+  var warnEl = document.getElementById(type + 'Warn');
+  errEl.style.display  = 'none';
+  warnEl.style.display = 'none';
+  if (!msg) return;
+  if (kind === 'error') { errEl.innerHTML = msg;  errEl.style.display  = 'flex'; }
+  else                  { warnEl.innerHTML = msg; warnEl.style.display = 'flex'; }
+}
 
 // Handles single-letter cols (A=0) and two-letter cols (AG=32, etc.)
 function colIdx(l) {
@@ -335,6 +488,22 @@ function colIdx(l) {
 }
 function fmtSz(b) { if(b<1024)return b+' B'; if(b<1048576)return (b/1024).toFixed(1)+' KB'; return (b/1048576).toFixed(1)+' MB'; }
 function todayStr() { return new Date().toISOString().slice(0,10); }
+
+// ── PART NUMBER NORMALIZATION — strip non-alphanumeric, lowercase ──
+function normPN(v) {
+  return String(v === null || v === undefined ? '' : v)
+    .replace(/^\^+/, '')   // SheetJS text-forced prefix
+    .replace(/[^a-z0-9]/gi, '')
+    .toLowerCase()
+    .trim();
+}
+// Keep original normalisation (just trim/lower) as fallback key
+function normPNExact(v) {
+  return String(v === null || v === undefined ? '' : v)
+    .replace(/^\^+/, '')
+    .trim()
+    .toLowerCase();
+}
 
 // ── PERSIST ──
 var PKEYS = ['inputPM','inputHWTL','inputClient','inputOrderValue','inputProjCost','inputActualCost'];
@@ -353,6 +522,11 @@ function loadSettings() {
     PKEYS.forEach(function(k){ var el=document.getElementById(k); if(el&&obj[k]!==undefined&&obj[k]!=='') el.value=obj[k]; });
   } catch(e){}
 }
+function clearSavedData() {
+  if (!confirm('Clear all saved project details (PM, client, costs)?')) return;
+  try { localStorage.removeItem('wz-rfm-v2'); } catch(e){}
+  PKEYS.forEach(function(k){ var el=document.getElementById(k); if(el) el.value=''; });
+}
 
 // ── READ EXCEL (xlsx / xls / xlsb — all via SheetJS) ──
 function readExcelSheet(file, preferredSheet) {
@@ -361,9 +535,13 @@ function readExcelSheet(file, preferredSheet) {
     reader.onload = function(e) {
       try {
         var wb = XLSX.read(e.target.result, {type:'array', cellDates:false});
-        var ws = null;
+        var foundSheet = null;
         if (preferredSheet && wb.SheetNames.indexOf(preferredSheet) !== -1) {
-          ws = wb.Sheets[preferredSheet];
+          foundSheet = preferredSheet;
+        }
+        var ws = null;
+        if (foundSheet) {
+          ws = wb.Sheets[foundSheet];
         } else {
           var best = null, bestN = 0;
           for (var i = 0; i < wb.SheetNames.length; i++) {
@@ -375,64 +553,156 @@ function readExcelSheet(file, preferredSheet) {
           ws = best;
         }
         var data = XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:true});
-        resolve({data: data, sheetNames: wb.SheetNames});
-      } catch(err) { resolve({data:[], sheetNames:[]}); }
+        resolve({data: data, sheetNames: wb.SheetNames, foundSheet: foundSheet});
+      } catch(err) { resolve({data:[], sheetNames:[], foundSheet:null}); }
     };
     reader.readAsArrayBuffer(file);
   });
 }
 
+// ── AUTO-DETECT HEADER ROW ──
+// Requires the row to match at least `minScore` of the keywords, AND
+// at least one cell must be a SHORT label (≤ 30 chars) to avoid matching
+// free-text metadata rows that happen to contain a keyword word.
+function detectHeaderRow(data, keywords, minScore) {
+  minScore = minScore || Math.ceil(keywords.length * 0.55); // need >55% match
+  var best = {row: -1, score: 0};
+  for (var i = 0; i < Math.min(25, data.length); i++) {
+    var row = data[i].map(function(v){ return String(v||'').toLowerCase().trim(); });
+    // Row must have at least 3 non-empty cells that are short labels (header-like)
+    var shortCells = row.filter(function(c){ return c.length > 0 && c.length <= 35; }).length;
+    if (shortCells < 3) continue;
+    var score = keywords.filter(function(kw){
+      return row.some(function(cell){ return cell === kw || cell.includes(kw); });
+    }).length;
+    if (score >= minScore && score > best.score) {
+      best = {row: i, score: score};
+    }
+  }
+  return best.row;
+}
+
+// Find column index in a header row — prefers EXACT match over partial
+function findCol(headerRow, keyword) {
+  keyword = keyword.toLowerCase().trim();
+  // 1. Exact match first
+  for (var i = 0; i < headerRow.length; i++) {
+    if (String(headerRow[i]||'').toLowerCase().trim() === keyword) return i;
+  }
+  // 2. Starts-with match
+  for (var i = 0; i < headerRow.length; i++) {
+    if (String(headerRow[i]||'').toLowerCase().trim().startsWith(keyword)) return i;
+  }
+  // 3. Contains match
+  for (var i = 0; i < headerRow.length; i++) {
+    if (String(headerRow[i]||'').toLowerCase().includes(keyword)) return i;
+  }
+  return -1;
+}
+
 // ── FILE HANDLERS ──
 function handleRFM(input) {
   if (!input.files.length) return;
-  rfmFile = input.files[0]; input.value = '';
+  processRFMFile(input.files[0]);
+  input.value = '';
+}
+function processRFMFile(file) {
+  rfmFile = file;
   var ext = rfmFile.name.split('.').pop().toUpperCase();
   document.getElementById('rfmEmptyZone').style.display = 'none';
   document.getElementById('rfmChip').style.display = 'flex';
   document.getElementById('rfmExt').textContent = ext;
   document.getElementById('rfmName').textContent = rfmFile.name;
   document.getElementById('rfmSize').textContent = fmtSz(rfmFile.size);
+  showFileMsg('rfm', null, null);
   var bare = rfmFile.name.replace(/\.(xlsx|xls|xlsb)$/i,'');
   document.getElementById('exportFileName').value = 'RFM_' + bare.replace(/[^a-zA-Z0-9_\-]/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'');
+
   readExcelSheet(rfmFile, 'Return Mat Slip').then(function(res) {
-    var count = res.data.slice(12).filter(function(r){return r.some(function(v){return v!=='';});}).length;
+    // Sheet validation
+    var hasSheet = res.foundSheet === 'Return Mat Slip';
+    if (!hasSheet) {
+      var names = res.sheetNames.join(', ');
+      if (res.sheetNames.some(function(n){ return n.toLowerCase().includes('po') || n.toLowerCase().includes('purchase'); })) {
+        showFileMsg('rfm', 'error', '⚠ This looks like a PO file — sheets found: <strong>' + names + '</strong>. Expected "Return Mat Slip".');
+      } else {
+        showFileMsg('rfm', 'warn', '⚠ Sheet "Return Mat Slip" not found. Using largest sheet instead. Found: <strong>' + names + '</strong>');
+      }
+    }
+    // Header auto-detect
+    var keywords = ['part','return','make','section','scope','qty'];
+    var hdrRow = detectHeaderRow(res.data, keywords);
+    var count = hdrRow >= 0
+      ? res.data.slice(hdrRow + 1).filter(function(r){return r.some(function(v){return v!=='';});}).length
+      : res.data.slice(12).filter(function(r){return r.some(function(v){return v!=='';});}).length;
     document.getElementById('rfmPreview').style.display = '';
-    document.getElementById('rfmPreview').innerHTML = '✓ <strong>' + count + ' RFM parts</strong> detected (sheet: Return Mat Slip)';
+    document.getElementById('rfmPreview').innerHTML =
+      '✓ <strong>' + count + ' RFM parts</strong> detected' +
+      (hdrRow >= 0 ? ' · headers at row ' + (hdrRow+1) : '') +
+      (hasSheet ? ' · sheet: Return Mat Slip' : ' · using fallback sheet');
   });
   checkReady();
 }
+
 function clearRFM() {
   rfmFile = null;
   document.getElementById('rfmEmptyZone').style.display = '';
   document.getElementById('rfmChip').style.display = 'none';
   document.getElementById('rfmPreview').style.display = 'none';
   document.getElementById('rfmInput').value = '';
+  showFileMsg('rfm', null, null);
   checkReady();
 }
+
 function handlePO(input) {
   if (!input.files.length) return;
-  poFile = input.files[0]; input.value = '';
+  processPOFile(input.files[0]);
+  input.value = '';
+}
+function processPOFile(file) {
+  poFile = file;
   var ext = poFile.name.split('.').pop().toUpperCase();
   document.getElementById('poEmptyZone').style.display = 'none';
   document.getElementById('poChip').style.display = 'flex';
   document.getElementById('poExt').textContent = ext;
   document.getElementById('poName').textContent = poFile.name;
   document.getElementById('poSize').textContent = fmtSz(poFile.size);
+  showFileMsg('po', null, null);
+
   readExcelSheet(poFile, 'PO_Status').then(function(res) {
-    var count = res.data.slice(4).filter(function(r){return r.some(function(v){return v!=='';});}).length;
+    var hasSheet = res.foundSheet === 'PO_Status';
+    if (!hasSheet) {
+      var names = res.sheetNames.join(', ');
+      if (res.sheetNames.some(function(n){ return n.toLowerCase().includes('return') || n.toLowerCase().includes('rfm'); })) {
+        showFileMsg('po', 'error', '⚠ This looks like an RFM file — sheets found: <strong>' + names + '</strong>. Expected "PO_Status".');
+      } else {
+        showFileMsg('po', 'warn', '⚠ Sheet "PO_Status" not found. Using largest sheet instead. Found: <strong>' + names + '</strong>');
+      }
+    }
+    var keywords = ['part','po','qty','supplier','price','customer'];
+    var hdrRow = detectHeaderRow(res.data, keywords);
+    var count = hdrRow >= 0
+      ? res.data.slice(hdrRow + 1).filter(function(r){return r.some(function(v){return v!=='';});}).length
+      : res.data.slice(4).filter(function(r){return r.some(function(v){return v!=='';});}).length;
     document.getElementById('poPreview').style.display = '';
-    document.getElementById('poPreview').innerHTML = '✓ <strong>' + count + ' PO entries</strong> detected (sheet: PO_Status)';
+    document.getElementById('poPreview').innerHTML =
+      '✓ <strong>' + count + ' PO entries</strong> detected' +
+      (hdrRow >= 0 ? ' · headers at row ' + (hdrRow+1) : '') +
+      (hasSheet ? ' · sheet: PO_Status' : ' · using fallback sheet');
   });
   checkReady();
 }
+
 function clearPO() {
   poFile = null;
   document.getElementById('poEmptyZone').style.display = '';
   document.getElementById('poChip').style.display = 'none';
   document.getElementById('poPreview').style.display = 'none';
   document.getElementById('poInput').value = '';
+  showFileMsg('po', null, null);
   checkReady();
 }
+
 function checkReady() {
   var ok = !!(rfmFile && poFile);
   document.getElementById('processBtn').disabled = !ok;
@@ -447,29 +717,12 @@ async function processData() {
   document.getElementById('processBtn').disabled = true;
   document.getElementById('processBtn').textContent = 'Processing...';
 
-  // Fixed column indices — RFM "Return Mat Slip"
-  var rfmCI  = 0;   // A — Item Req No
-  var rfmCM  = 1;   // B — Make
-  var rfmCT  = 2;   // C — Part No
-  var rfmCD  = 3;   // D — Description
-  var rfmCSc = 4;   // E — Scope
-  var rfmCSe = 5;   // F — Section
-  var rfmCQ  = 6;   // G — Return Qty
-  var rfmOrRow = 5; // OR Number lives in col B (idx 1) of row 5
-  var rfmDR  = 13;  // data starts row 13
-
-  // Fixed column indices — PO "PO_Status"
-  var poCT   = 3;   // D — Part No
-  var poCCust= 11;  // L — Customer
-  var poCQ   = 14;  // O — PO Qty
-  var poCPN  = 15;  // P — PO No
-  var poCSup = 17;  // R — Supplier
-  var poCUP  = 32;  // AG — Unit Price
-  var poDR   = 5;   // data starts row 5
-
-  // Strip ^ prefix SheetJS adds to text-forced cells, lowercase, trim
-  function normPN(v) {
-    return String(v === null || v === undefined ? '' : v).replace(/^\^+/, '').trim().toLowerCase();
+  var skipVals = ['fl','type/order no','make','description','item req id','section','customer',
+                  'part no','part number','timewk','request','std'];
+  function isSkip(s) {
+    if (!s) return true;
+    var sl = s.toLowerCase().trim();
+    return skipVals.some(function(sv){ return sl === sv || sl.startsWith(sv); });
   }
 
   var res = await Promise.all([
@@ -479,24 +732,115 @@ async function processData() {
   var rfmData = res[0].data;
   var poData  = res[1].data;
 
-  // OR Number: col B (idx 1) of row 5
-  var orNumber = String((rfmData[rfmOrRow - 1] || [])[1] || '').trim();
-
-  // Build PO map keyed by normalised Part No
-  var poMap = new Map();
-  var skipVals = ['fl','type/order no','make','description','item req id','section','customer',
-                  'part no','part number','timewk','request','std'];
-  function isSkip(s) {
-    if (!s) return true;
-    var sl = s.toLowerCase().trim();
-    return skipVals.some(function(sv){ return sl === sv || sl.startsWith(sv); });
+  // ── FL SUB-HEADER SKIPPER ──
+  // After the detected header row, skip any rows where every non-empty cell
+  // is a short (≤6 chars) non-numeric label — e.g. "FL", "FL FL", separators.
+  // These are always treated as part of the header block, never as data.
+  function skipSubHeaders(data, hdrIdx) {
+    var dataStart = hdrIdx + 1;
+    while (dataStart < data.length) {
+      var row = data[dataStart];
+      var nonEmpty = row.filter(function(v){ return String(v||'').trim() !== ''; });
+      if (nonEmpty.length === 0) { dataStart++; continue; }
+      var isSubHdr = nonEmpty.every(function(v) {
+        var s = String(v).trim();
+        return s.length <= 6 && isNaN(s);
+      });
+      if (isSubHdr) { dataStart++; } else { break; }
+    }
+    return dataStart;
   }
+
+  // ── RFM COLUMNS ──
+  var rfmHdrIdx, rfmHdrRow;
+  if (detectionSettings.autoRFM) {
+    rfmHdrIdx = detectHeaderRow(rfmData, ['item req', 'make', 'part', 'description', 'scope', 'section', 'qty'], 4);
+    rfmHdrRow = rfmHdrIdx >= 0 ? rfmData[rfmHdrIdx].map(function(v){ return String(v||'').toLowerCase().trim(); }) : null;
+  } else {
+    rfmHdrIdx = -1; rfmHdrRow = null; // force fixed-position mode
+  }
+
+  var rfmCI  = rfmHdrRow ? findCol(rfmHdrRow, 'item req')  : 0;  // Item Req No  → col A (0)
+  var rfmCM  = rfmHdrRow ? findCol(rfmHdrRow, 'make')      : 1;  // Make         → col B (1)
+  var rfmCT  = rfmHdrRow ? findCol(rfmHdrRow, 'part no')   : 2;  // Part No      → col C (2)
+  var rfmCD  = rfmHdrRow ? findCol(rfmHdrRow, 'desc')      : 3;  // Description  → col D (3)
+  var rfmCSc = rfmHdrRow ? findCol(rfmHdrRow, 'scope')     : 4;  // Scope        → col E (4)
+  var rfmCSe = rfmHdrRow ? findCol(rfmHdrRow, 'section')   : 5;  // Section      → col F (5)
+
+  // Return Qty: look for 'return qty' specifically, then last 'qty' col (avoids PO Qty / Project Qty)
+  var rfmCQ = -1;
+  if (rfmHdrRow) {
+    rfmCQ = findCol(rfmHdrRow, 'return qty');
+    if (rfmCQ < 0) rfmCQ = findCol(rfmHdrRow, 'return');
+    if (rfmCQ < 0) {
+      for (var qi = rfmHdrRow.length - 1; qi >= 0; qi--) {
+        if (rfmHdrRow[qi].includes('qty') || rfmHdrRow[qi].includes('quantity')) { rfmCQ = qi; break; }
+      }
+    }
+  }
+  if (rfmCI  < 0) rfmCI  = 0;
+  if (rfmCM  < 0) rfmCM  = 1;
+  if (rfmCT  < 0) rfmCT  = 2;
+  if (rfmCD  < 0) rfmCD  = 3;
+  if (rfmCSc < 0) rfmCSc = 4;
+  if (rfmCSe < 0) rfmCSe = 5;
+  if (rfmCQ  < 0) rfmCQ  = 6;  // col G — original fixed position
+
+  // Data start: skip sub-headers (FL rows) after header. Fixed fallback = row 13 (0-based 12)
+  var rfmDR = rfmHdrIdx >= 0 ? skipSubHeaders(rfmData, rfmHdrIdx) + 1 : 13;
+
+  // OR Number: scan first 10 rows
+  var orNumber = '';
+  for (var oi = 0; oi < Math.min(10, rfmData.length); oi++) {
+    var or = rfmData[oi];
+    for (var oc = 0; oc < or.length; oc++) {
+      if (String(or[oc]||'').toLowerCase().includes('or no') || String(or[oc]||'').toLowerCase().includes('or number')) {
+        orNumber = String(or[oc+1] || or[oc+2] || '').trim();
+        break;
+      }
+    }
+    if (orNumber) break;
+  }
+  if (!orNumber) orNumber = String((rfmData[4] || [])[1] || '').trim();
+
+  // ── PO COLUMNS ──
+  var poHdrIdx, poHdrRow;
+  if (detectionSettings.autoPO) {
+    poHdrIdx = detectHeaderRow(poData, ['part', 'po no', 'qty', 'supplier', 'price', 'customer'], 3);
+    poHdrRow = poHdrIdx >= 0 ? poData[poHdrIdx].map(function(v){ return String(v||'').toLowerCase().trim(); }) : null;
+  } else {
+    poHdrIdx = -1; poHdrRow = null; // force fixed-position mode
+  }
+
+  var poCT    = poHdrRow ? findCol(poHdrRow, 'part no')    : 3;   // Part No       → col D (3)
+  var poCCust = poHdrRow ? findCol(poHdrRow, 'customer')   : 11;  // Customer      → col L (11)
+  var poCQ    = poHdrRow ? (findCol(poHdrRow,'po qty') >= 0 ? findCol(poHdrRow,'po qty') : findCol(poHdrRow,'qty')) : 14;
+  var poCPN   = poHdrRow ? findCol(poHdrRow, 'po no')      : 15;  // PO No         → col P (15)
+  var poCSup  = poHdrRow ? findCol(poHdrRow, 'supplier')   : 17;  // Supplier      → col R (17)
+  var poCUP   = poHdrRow ? (findCol(poHdrRow,'unit price') >= 0 ? findCol(poHdrRow,'unit price') : findCol(poHdrRow,'price')) : 32;
+
+  if (poCT    < 0) poCT    = 3;
+  if (poCCust < 0) poCCust = 11;
+  if (poCQ    < 0) poCQ    = 14;
+  if (poCPN   < 0) poCPN   = 15;
+  if (poCSup  < 0) poCSup  = 17;
+  if (poCUP   < 0) poCUP   = 32;
+
+  // Data start: skip FL sub-headers. Fixed fallback = row 5 (0-based 4)
+  var poDR = poHdrIdx >= 0 ? skipSubHeaders(poData, poHdrIdx) + 1 : 5;
+
+  // Build PO map — dual keys: exact-normalised AND fuzzy-normalised
+  // Structure: { exactKey -> entry, fuzzyKey -> entry }
+  var poMapExact = new Map();
+  var poMapFuzzy = new Map();
 
   for (var pi = poDR - 1; pi < poData.length; pi++) {
     var pr = poData[pi];
     if (!pr || !pr.some(function(v){ return v !== ''; })) continue;
-    var pt = normPN(pr[poCT]);
-    if (!pt || isSkip(pt)) continue;
+    var rawPT = String(pr[poCT] !== undefined && pr[poCT] !== null ? pr[poCT] : '');
+    var ptExact = normPNExact(rawPT);
+    var ptFuzzy = normPN(rawPT);
+    if (!ptExact || isSkip(ptExact)) continue;
 
     var pq = pr[poCQ];
     pq = typeof pq === 'number' ? pq : (parseFloat(String(pq||'').replace(/,/g,''))||0);
@@ -506,13 +850,19 @@ async function processData() {
     var poNo     = String(pr[poCPN]   || '').trim();
     var supplier = String(pr[poCSup]  || '').trim();
 
-    if (!poMap.has(pt)) poMap.set(pt, {customer:'', poQty:0, poNo:'', supplier:'', unitPrice:0});
-    var e = poMap.get(pt);
+    // Store in exact map
+    if (!poMapExact.has(ptExact)) poMapExact.set(ptExact, {customer:'', poQty:0, poNo:'', supplier:'', unitPrice:0});
+    var e = poMapExact.get(ptExact);
     e.poQty += pq;
     if (!e.customer  && customer)  e.customer  = customer;
     if (!e.poNo      && poNo)      e.poNo      = poNo;
     if (!e.supplier  && supplier)  e.supplier  = supplier;
     if (!e.unitPrice && up > 0)    e.unitPrice = up;
+
+    // Store in fuzzy map (only if key differs from exact, to avoid double-counting)
+    if (ptFuzzy && ptFuzzy !== ptExact) {
+      if (!poMapFuzzy.has(ptFuzzy)) poMapFuzzy.set(ptFuzzy, poMapExact.get(ptExact));
+    }
   }
 
   // Build RFM rows
@@ -522,18 +872,27 @@ async function processData() {
     if (!rr || !rr.some(function(v){ return v !== ''; })) continue;
     var rawPN = String(rr[rfmCT] !== undefined && rr[rfmCT] !== null ? rr[rfmCT] : '').trim();
     if (!rawPN) continue;
-    var typeNoNorm = normPN(rawPN);
 
     var retQty = rr[rfmCQ];
     retQty = typeof retQty === 'number' ? retQty : (parseFloat(String(retQty||'').replace(/,/g,''))||0);
 
-    // Match attempts: exact → strip .0 → numeric parse
-    var poEntry = poMap.get(typeNoNorm)
-      || poMap.get(typeNoNorm.replace(/\.0+$/, ''));
-    if (!poEntry && !isNaN(typeNoNorm.replace(/[.\-]/g,''))) {
-      poEntry = poMap.get(String(parseInt(typeNoNorm)))
-             || poMap.get(String(parseFloat(typeNoNorm)));
-    }
+    // ── MULTI-STRATEGY MATCHING (best-effort, in order of strictness) ──
+    var pnExact = normPNExact(rawPN);
+    var pnFuzzy = normPN(rawPN);
+
+    var poEntry =
+      // 1. Exact normalised (trim+lower)
+      poMapExact.get(pnExact) ||
+      // 2. Strip trailing .0 artefacts
+      poMapExact.get(pnExact.replace(/\.0+$/, '')) ||
+      // 3. Fuzzy (strip all non-alphanumeric)
+      poMapFuzzy.get(pnFuzzy) ||
+      poMapExact.get(pnFuzzy) ||
+      // 4. Numeric parse (handles "123.0" ↔ "123")
+      (!isNaN(pnFuzzy.replace(/[.\-]/g,'')) && (
+        poMapExact.get(String(parseInt(pnExact))) ||
+        poMapExact.get(String(parseFloat(pnExact)))
+      )) || null;
 
     var poQty     = poEntry ? poEntry.poQty     : 0;
     var customer  = poEntry ? poEntry.customer  : '';
@@ -590,22 +949,86 @@ function goTo(n) {
   if (n===3) renderExportSummary();
 }
 
+// ── SVG ICONS for stat cards ──
+var SVG = {
+  parts:   '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
+  matched: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  excess:  '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>',
+  short:   '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>',
+  nopo:    '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+  tag:     '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>',
+  money:   '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>'
+};
+
 // ── VIZ (Screen 2 preview table) ──
 function renderViz() {
   var p = processedData;
   var totalAmt = p.rfmRows.reduce(function(s,r){return s+r.totalReturned;},0);
 
+  // SVG stat cards
   document.getElementById('statsBar').innerHTML =
-    '<div class="stat-card"><span class="stat-icon">📋</span><div><div class="stat-val">'+p.total+'</div><div class="stat-label">Parts</div></div></div>'+
-    '<div class="stat-card"><span class="stat-icon">✅</span><div><div class="stat-val" style="color:var(--success)">'+p.exact+'</div><div class="stat-label">Matched</div></div></div>'+
-    '<div class="stat-card"><span class="stat-icon">⬆️</span><div><div class="stat-val" style="color:#0369a1">'+p.excess+'</div><div class="stat-label">More Returned</div></div></div>'+
-    '<div class="stat-card"><span class="stat-icon">⬇️</span><div><div class="stat-val" style="color:var(--danger)">'+p.short+'</div><div class="stat-label">Less Returned</div></div></div>'+
-    '<div class="stat-card"><span class="stat-icon">❓</span><div><div class="stat-val" style="color:var(--muted)">'+p.noPo+'</div><div class="stat-label">No PO</div></div></div>'+
-    (p.orNumber?'<div class="stat-card"><span class="stat-icon">🔖</span><div><div class="stat-val" style="font-size:.82rem;letter-spacing:-.02em;">'+p.orNumber+'</div><div class="stat-label">OR Number</div></div></div>':'')+
-    (totalAmt>0?'<div class="stat-card"><span class="stat-icon">💰</span><div><div class="stat-val" style="font-size:.9rem;">'+totalAmt.toFixed(0)+'</div><div class="stat-label">Total Returned</div></div></div>':'');
+    statCard(SVG.parts,   p.total,  'Parts',         '') +
+    statCard(SVG.matched, p.exact,  'Matched',       'color:var(--success)') +
+    statCard(SVG.excess,  p.excess, 'More Returned', 'color:#0369a1') +
+    statCard(SVG.short,   p.short,  'Less Returned', 'color:var(--danger)') +
+    statCard(SVG.nopo,    p.noPo,   'No PO',         'color:var(--muted)') +
+    (p.orNumber ? statCard(SVG.tag, p.orNumber, 'OR Number', 'font-size:.78rem;letter-spacing:-.01em;') : '') +
+    (totalAmt > 0 ? statCard(SVG.money, totalAmt.toFixed(0), 'Total Returned', 'font-size:.88rem;') : '');
+
+  // Init filter counts
+  document.getElementById('fc-all').textContent   = p.total;
+  document.getElementById('fc-exact').textContent = p.exact;
+  document.getElementById('fc-short').textContent = p.short;
+  document.getElementById('fc-excess').textContent= p.excess;
+  document.getElementById('fc-nopo').textContent  = p.noPo;
+  document.getElementById('filterBar').style.display = '';
+
+  renderTable();
+}
+
+function statCard(iconSvg, val, label, valStyle) {
+  return '<div class="stat-card"><span class="stat-icon" style="color:var(--accent);">' + iconSvg + '</span>'
+       + '<div><div class="stat-val"' + (valStyle ? ' style="' + valStyle + '"' : '') + '>' + val + '</div>'
+       + '<div class="stat-label">' + label + '</div></div></div>';
+}
+
+// ── FILTER ──
+function setFilter(f) {
+  activeFilter = f;
+  filterQuery  = document.getElementById('filterSearch').value;
+  document.querySelectorAll('.filter-btn').forEach(function(b){
+    b.classList.toggle('active', b.dataset.filter === f);
+  });
+  renderTable();
+}
+
+function applyFilter() {
+  filterQuery = document.getElementById('filterSearch').value;
+  renderTable();
+}
+
+function resetFilters() {
+  activeFilter = 'all';
+  filterQuery  = '';
+  document.getElementById('filterSearch').value = '';
+  document.querySelectorAll('.filter-btn').forEach(function(b){
+    b.classList.toggle('active', b.dataset.filter === 'all');
+  });
+  renderTable();
+}
+
+function renderTable() {
+  var p   = processedData;
+  var q   = filterQuery.toLowerCase().trim();
+  var rows = p.rfmRows.filter(function(r) {
+    if (activeFilter !== 'all' && r.status !== activeFilter) return false;
+    if (q && !(r.typeNo.toLowerCase().includes(q) || r.desc.toLowerCase().includes(q) ||
+               r.make.toLowerCase().includes(q)   || r.poNo.toLowerCase().includes(q))) return false;
+    return true;
+  });
 
   var html = '<div class="section-block">'
-    + '<div class="section-head"><h3>RFM Report</h3><span class="section-badge">'+p.total+' parts</span></div>'
+    + '<div class="section-head"><h3>RFM Report</h3><span class="section-badge">' + rows.length + ' / ' + p.total + ' parts</span></div>'
     + '<div style="overflow-x:auto;"><table class="viz-table"><thead><tr>'
     + '<th>#</th><th>Item Req No</th><th>Make</th><th>Part No</th><th>Description</th>'
     + '<th>Scope</th><th>Section</th>'
@@ -619,9 +1042,13 @@ function renderViz() {
     + '<th style="background:#15803d;">% Ret</th>'
     + '<th>Unit Price</th>'
     + '<th style="background:#1e3a5f;">Total Amt Returned</th>'
+    + '<th>Status</th>'
     + '</tr></thead><tbody>';
 
-  p.rfmRows.forEach(function(r, i) {
+  if (!rows.length) {
+    html += '<tr><td colspan="19" style="text-align:center;padding:32px;color:var(--muted);font-size:.82rem;">No rows match the current filter</td></tr>';
+  }
+  rows.forEach(function(r, i) {
     var noPo = r.status === 'no-po';
     var pctFmt   = r.poQty > 0    ? r.pctReturned.toFixed(1)+'%'  : '—';
     var totalFmt = r.unitPrice > 0 ? r.totalReturned.toFixed(2)    : '—';
@@ -629,6 +1056,10 @@ function renderViz() {
     var poFmt    = noPo ? '—' : r.poQty;
     var upFmt    = r.unitPrice > 0 ? r.unitPrice.toFixed(2)        : '—';
     var rowOp    = noPo ? ' style="opacity:.75;"' : '';
+    var pill = r.status === 'exact'  ? '<span class="pill pill-exact">Exact</span>'
+             : r.status === 'short'  ? '<span class="pill pill-short">Short</span>'
+             : r.status === 'excess' ? '<span class="pill pill-excess">Excess</span>'
+             :                         '<span class="pill pill-no-po">No PO</span>';
     html += '<tr'+rowOp+'>'
       + '<td style="color:var(--muted);font-size:.68rem;">'+(i+1)+'</td>'
       + '<td class="td-mono" style="font-size:.68rem;color:var(--muted);">'+(r.itemReqNo||'—')+'</td>'
@@ -648,6 +1079,7 @@ function renderViz() {
       + '<td class="td-center" style="font-size:.72rem;">'+pctFmt+'</td>'
       + '<td class="td-center" style="font-size:.72rem;">'+upFmt+'</td>'
       + '<td class="td-center" style="font-weight:700;">'+totalFmt+'</td>'
+      + '<td class="td-center">'+pill+'</td>'
       + '</tr>';
   });
   html += '</tbody></table></div></div>';
@@ -932,6 +1364,7 @@ function toggleDark(){
     }
   } catch(e){}
   loadSettings();
+  loadDetectionSettings();
 })();
 </script>
 </body>
