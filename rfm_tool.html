@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Workezz — RFM Tracker</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
@@ -47,7 +47,7 @@ body.dark::before {
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;min-height:100vh;font-size:14px;}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;min-height:100vh;font-size:14px;}
 
 /* ── HEADER ── */
 header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:var(--shadow);z-index:10;position:relative;backdrop-filter:blur(12px);}
@@ -79,26 +79,26 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 .s1-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow);backdrop-filter:blur(12px);transition:border-color .2s;}
 body.dark .s1-panel{box-shadow:0 4px 24px rgba(0,0,0,.3);}
 .s1-panel:hover{border-color:var(--border2);}
-.panel-title{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:800;color:var(--text);margin-bottom:2px;}
-.panel-sub{font-size:.68rem;color:var(--muted);}
+.panel-title{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:800;color:var(--text);margin-bottom:4px;letter-spacing:-.01em;}
+.panel-sub{font-size:.72rem;color:var(--text2);line-height:1.5;}
 
 /* ── UPLOAD ZONE ── */
 .upload-zone{border:1.5px dashed var(--border2);border-radius:var(--radius-sm);padding:22px 16px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface2);}
 .upload-zone:hover{border-color:var(--accent);background:var(--accent-l);}
 .uz-icon{font-size:1.8rem;display:block;margin-bottom:6px;}
-.uz-text{font-size:.78rem;font-weight:600;color:var(--text2);margin-bottom:3px;}
-.uz-sub{font-size:.65rem;color:var(--muted);}
+.uz-text{font-size:.82rem;font-weight:600;color:var(--text2);margin-bottom:4px;}
+.uz-sub{font-size:.7rem;color:var(--text2);}
 .file-chip{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;}
 .fc-icon{width:32px;height:32px;border-radius:6px;background:var(--accent);color:#fff;font-size:.56rem;font-weight:800;font-family:'IBM Plex Mono',monospace;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .fc-info{flex:1;min-width:0;}
-.fc-name{font-size:.73rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.fc-sub{font-size:.62rem;color:var(--muted);margin-top:1px;}
+.fc-name{font-size:.78rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.fc-sub{font-size:.68rem;color:var(--text2);margin-top:2px;}
 
 /* ── PROJECT DETAILS PANEL ── */
 .proj-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
 .proj-item{display:flex;flex-direction:column;gap:5px;}
-.proj-label{font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
-.proj-field{border:1px solid var(--border2);border-radius:var(--radius-sm);padding:8px 11px;font-family:'DM Sans',sans-serif;font-size:.82rem;color:var(--text);background:var(--surface2);outline:none;width:100%;transition:all .2s;}
+.proj-label{font-size:.7rem;font-weight:600;letter-spacing:.04em;color:var(--text2);}
+.proj-field{border:1px solid var(--border2);border-radius:var(--radius-sm);padding:9px 12px;font-family:'IBM Plex Sans',sans-serif;font-size:.85rem;color:var(--text);background:var(--surface2);outline:none;width:100%;transition:all .2s;line-height:1.4;}
 .proj-field:focus{border-color:var(--accent);background:var(--accent-l);box-shadow:0 0 0 3px rgba(99,102,241,.12);}
 .proj-field::placeholder{color:var(--muted);opacity:.6;}
 body.dark .proj-field{background:rgba(255,255,255,.05);}
@@ -180,7 +180,9 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:9px 
 
 <div class="stepper">
   <div class="step active" id="step1"><div class="step-num">1</div> Import Files</div>
+  <span class="step-arrow">›</span>
   <div class="step" id="step2"><div class="step-num">2</div> Compare</div>
+  <span class="step-arrow">›</span>
   <div class="step" id="step3"><div class="step-num">3</div> Export</div>
 </div>
 
@@ -269,7 +271,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:9px 
     </div>
   </div>
   <div class="s1-footer">
-    <span id="s1hint" style="font-size:.74rem;color:var(--muted);">Upload both RFM and PO files to continue</span>
+    <span id="s1hint" style="font-size:.78rem;font-weight:500;color:var(--text2);">Upload both RFM and PO files to continue</span>
     <button class="btn btn-primary btn-lg" id="processBtn" onclick="processData()" disabled>Compare ›</button>
   </div>
 </div>
@@ -297,8 +299,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:9px 
     <div class="export-card">
       <div style="font-size:2.4rem;margin-bottom:10px;">📥</div>
       <h2>Export RFM Report</h2>
-      <p>Exports a single sheet <strong>"RFM Report"</strong> with all columns:<br>
-      Item Req No · Make · Part No · Description · Scope · Section · Customer · OR Number · Project Qty · PO Qty · PO No · Supplier · Used Qty · Return Qty · % Returned · Unit Price · Total Amt Returned</p>
+      <p>Exports up to <strong>3 sheets</strong>:<br><strong>"RFM Report"</strong> — all 17 columns · <strong>"Summary"</strong> — project KPIs · <strong>"Unmatched Parts"</strong> — parts in RFM with no PO match <em style="font-size:.72rem;">(only appears if unmatched parts exist)</em></p>
       <div class="export-summary" id="exportSummary"></div>
       <div style="margin-bottom:16px;text-align:left;">
         <div style="font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Output File Name</div>
@@ -831,6 +832,72 @@ async function exportExcel() {
       if ((i===5||i===6||i===7||i===9) && v!==null) c.numFmt = '#,##0.00';
       if ((i===8||i===10||i===11||i===12) && v!==null) c.numFmt = '0.00"%"';
     });
+
+    // ══════════════════════════════════════
+    // SHEET 3 — Unmatched Parts (only if any exist)
+    // Parts present in RFM but not found in PO
+    // ══════════════════════════════════════
+    var unmatchedRows = p.rfmRows.filter(function(r){ return r.status === 'no-po'; });
+
+    if (unmatchedRows.length > 0) {
+      var ws3 = wb.addWorksheet('Unmatched Parts');
+
+      // Column widths
+      [5, 13, 18, 28, 40, 10, 14, 12]
+        .forEach(function(w, i){ ws3.getColumn(i+1).width = w; });
+
+      // Info note row 1
+      var noteRow = ws3.getRow(1); noteRow.height = 20;
+      var noteCell = noteRow.getCell(1);
+      noteCell.value = 'These ' + unmatchedRows.length + ' part(s) were present in the RFM slip but had NO matching entry in the PO file. They may be unordered or incorrectly listed.';
+      noteCell.font  = {italic: true, size: 9, name: 'Calibri', color: {argb: 'FF92400E'}};
+      noteCell.fill  = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFFFF7ED'}};
+      noteCell.alignment = {vertical: 'middle'};
+      ws3.mergeCells(1, 1, 1, 8);
+      noteCell.border = {bottom: {style: 'thin', color: {argb: 'FFFED7AA'}}};
+
+      // Header row 2
+      var u_hdrs = ['SR', 'Item Req No', 'Make', 'Part No', 'Description', 'Scope', 'Section', 'Return Qty'];
+      var uHdrRow = ws3.getRow(2); uHdrRow.height = 22;
+      u_hdrs.forEach(function(v, i) {
+        var hc = uHdrRow.getCell(i+1);
+        hc.value = v;
+        hc.font      = {bold: true, size: 9, color: {argb: 'FFFFFFFF'}, name: 'Calibri'};
+        hc.fill      = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFDC2626'}};
+        hc.alignment = {vertical: 'middle', horizontal: 'center', wrapText: true};
+        hc.border    = {bottom: {style: 'medium', color: {argb: 'FFB91C1C'}}, right: {style: 'thin', color: {argb: 'FFB91C1C'}}};
+      });
+
+      // Data rows — alternating light pink / white
+      unmatchedRows.forEach(function(r, ri) {
+        var udr = ws3.addRow([]); udr.height = 16;
+        var ubg = ri % 2 === 0 ? 'FFFFFFFF' : 'FFFFF5F5';
+        var uvals = [ri+1, r.itemReqNo||'', r.make||'', r.typeNo, r.desc||'', r.scope||'', r.section||'', r.returnQty];
+        uvals.forEach(function(v, ci) {
+          var uc = udr.getCell(ci+1);
+          uc.value = (v === '' || v === null || v === undefined) ? null : v;
+          uc.fill  = {type: 'pattern', pattern: 'solid', fgColor: {argb: ubg}};
+          var isMono = ci === 3;
+          var isCtr  = ci === 0 || ci === 5 || ci === 6 || ci === 7;
+          var isBold = ci === 3 || ci === 7;
+          uc.font  = {size: 9, name: isMono ? 'Courier New' : 'Calibri', bold: isBold, color: {argb: ci === 3 ? 'FFDC2626' : 'FF1F2937'}};
+          uc.alignment = {vertical: 'middle', horizontal: isCtr ? 'center' : 'left', wrapText: ci === 4};
+          uc.border = {bottom: {style: 'thin', color: {argb: 'FFFEE2E2'}}, right: {style: 'thin', color: {argb: 'FFFEE2E2'}}};
+        });
+      });
+
+      // Totals row
+      var uTotalRow = ws3.addRow([]); uTotalRow.height = 18;
+      var uTotalQty = unmatchedRows.reduce(function(s, r){ return s + r.returnQty; }, 0);
+      ['', '', '', '', '', '', 'Total Return Qty', uTotalQty].forEach(function(v, ci) {
+        var tc = uTotalRow.getCell(ci+1);
+        tc.value = v || null;
+        tc.font  = {bold: true, size: 9, name: 'Calibri', color: {argb: ci === 7 ? 'FFDC2626' : 'FF374151'}};
+        tc.fill  = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFFEF2F2'}};
+        tc.alignment = {vertical: 'middle', horizontal: ci === 6 ? 'right' : ci === 7 ? 'center' : 'left'};
+        tc.border = {top: {style: 'medium', color: {argb: 'FFFCA5A5'}}, bottom: {style: 'thin', color: {argb: 'FFFCA5A5'}}};
+      });
+    }
 
     var buffer = await wb.xlsx.writeBuffer();
     var blob   = new Blob([buffer], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});

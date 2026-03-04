@@ -13,32 +13,42 @@ html { scroll-behavior: smooth; }
 
 /* ── DESIGN TOKENS ── */
 :root {
-  --bg:       #07090f;
-  --surface:  rgba(255,255,255,.035);
-  --surface2: rgba(255,255,255,.06);
-  --border:   rgba(255,255,255,.07);
-  --border2:  rgba(255,255,255,.13);
-  --text:     #f1f5f9;
-  --text2:    #94a3b8;
-  --muted:    #475569;
-  --accent:   #2563eb;
-  --accent-l: rgba(37,99,235,.1);
-  --radius:   12px;
-  --radius-sm:7px;
-  --shadow:   0 2px 16px rgba(0,0,0,.35);
-  --shadow-md:0 8px 40px rgba(0,0,0,.45);
+  --bg:        #080d0c;
+  --surface:   rgba(255,255,255,.04);
+  --surface2:  rgba(255,255,255,.07);
+  --border:    rgba(255,255,255,.07);
+  --border2:   rgba(255,255,255,.13);
+  --text:      #dff0eb;
+  --text2:     #7aa898;
+  --muted:     #3d5e55;
+  --accent:    #2dd4bf;
+  --accent2:   #14b8a6;
+  --accent-l:  rgba(45,212,191,.10);
+  --radius:    12px;
+  --radius-sm: 7px;
+  --shadow:    0 2px 16px rgba(0,0,0,.45);
+  --shadow-md: 0 8px 40px rgba(0,0,0,.55);
+  --grid-c:    rgba(45,212,191,.04);
+  --glow1:     rgba(45,212,191,.12);
+  --glow2:     rgba(20,184,166,.06);
 }
 body.light {
-  --bg:       #f0f4ff;
-  --surface:  #ffffff;
-  --surface2: rgba(0,0,0,.04);
-  --border:   rgba(0,0,0,.07);
-  --border2:  rgba(0,0,0,.13);
-  --text:     #0f172a;
-  --text2:    #475569;
-  --muted:    #94a3b8;
-  --shadow:   0 2px 12px rgba(0,0,0,.08);
-  --shadow-md:0 8px 32px rgba(0,0,0,.12);
+  --bg:        #f0f9f7;
+  --surface:   #ffffff;
+  --surface2:  rgba(0,0,0,.035);
+  --border:    rgba(0,0,0,.07);
+  --border2:   rgba(0,0,0,.12);
+  --text:      #0c1c19;
+  --text2:     #3d5e55;
+  --muted:     #7aa898;
+  --accent:    #0d9488;
+  --accent2:   #0f766e;
+  --accent-l:  rgba(13,148,136,.09);
+  --shadow:    0 2px 12px rgba(0,0,0,.07);
+  --shadow-md: 0 8px 32px rgba(0,0,0,.10);
+  --grid-c:    rgba(13,148,136,.07);
+  --glow1:     rgba(13,148,136,.10);
+  --glow2:     rgba(20,184,166,.04);
 }
 
 body {
@@ -50,15 +60,22 @@ body {
   flex-direction: column;
 }
 
-/* ── BACKGROUND GLOW ── */
+/* ── BACKGROUND: grid + soft glow ── */
 .bg-layer {
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background:
-    radial-gradient(ellipse 70% 50% at 50% -5%,  rgba(37,99,235,.16) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 35% at 85% 85%, rgba(139,92,246,.1)  0%, transparent 60%);
+  /* grid lines */
+  background-image:
+    linear-gradient(var(--grid-c) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-c) 1px, transparent 1px);
+  background-size: 56px 56px;
 }
-body.light .bg-layer {
-  background: radial-gradient(ellipse 70% 50% at 50% -5%, rgba(37,99,235,.09) 0%, transparent 70%);
+/* glow on top of grid */
+.bg-layer::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% -2%,  var(--glow1) 0%, transparent 68%),
+    radial-gradient(ellipse 40% 40% at 88% 90%,  var(--glow2) 0%, transparent 55%),
+    radial-gradient(ellipse 30% 35% at 8%  80%,  var(--glow2) 0%, transparent 50%);
 }
 
 /* ══════════════ NAVBAR ══════════════ */
@@ -66,7 +83,7 @@ body.light .bg-layer {
   position: sticky; top: 0; z-index: 100;
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 32px; height: 56px;
-  background: rgba(7,9,15,.82);
+  background: rgba(8,13,12,.85);
   border-bottom: 1px solid var(--border);
   backdrop-filter: blur(14px);
 }
@@ -77,7 +94,7 @@ body.light .navbar { background: rgba(240,244,255,.88); }
   font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 800;
   color: var(--text); letter-spacing: -.025em;
 }
-.nav-brand span { color: #3b82f6; }
+.nav-brand span { color: var(--accent); }
 
 .nav-center { position: absolute; left: 50%; transform: translateX(-50%); }
 .nav-tag {
@@ -109,7 +126,7 @@ body.light .navbar { background: rgba(240,244,255,.88); }
   font-family: 'Syne', sans-serif; font-size: 3.8rem; font-weight: 800;
   color: var(--text); letter-spacing: -.045em; line-height: 1;
 }
-.logo-text span { color: #3b82f6; }
+.logo-text span { color: var(--accent); }
 .logo-sub { margin-top: 16px; font-size: .86rem; color: var(--muted); max-width: 480px; line-height: 1.7; }
 
 /* ── Single card centering ── */
@@ -129,13 +146,13 @@ body.light .navbar { background: rgba(240,244,255,.88); }
 }
 .tool-card::after {
   content: ''; position: absolute; inset: 0; border-radius: var(--radius);
-  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(37,99,235,.09) 0%, transparent 70%);
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(45,212,191,.07) 0%, transparent 70%);
   opacity: 0; transition: opacity .25s; pointer-events: none;
 }
 .tool-card:hover {
   transform: translateY(-5px);
-  border-color: rgba(37,99,235,.42);
-  box-shadow: 0 20px 60px rgba(37,99,235,.18);
+  border-color: rgba(45,212,191,.35);
+  box-shadow: 0 20px 60px rgba(45,212,191,.12);
 }
 .tool-card:hover::after { opacity: 1; }
 body.light .tool-card { background: #fff; box-shadow: var(--shadow); }
@@ -145,14 +162,14 @@ body.light .tool-card { background: #fff; box-shadow: var(--shadow); }
 .tool-tag {
   font-size: .6rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
   border-radius: 100px; padding: 3px 11px;
-  background: rgba(37,99,235,.14); color: #60a5fa; border: 1px solid rgba(37,99,235,.28);
+  background: rgba(45,212,191,.12); color: var(--accent); border: 1px solid rgba(45,212,191,.25);
 }
 .tool-name {
   font-family: 'Syne', sans-serif; font-size: 1.22rem; font-weight: 800;
   color: var(--text); margin-bottom: 10px; letter-spacing: -.015em;
 }
 .tool-desc { font-size: .8rem; color: var(--muted); line-height: 1.68; margin-bottom: 22px; flex: 1; }
-.tool-arrow { font-size: .74rem; font-weight: 700; color: #3b82f6; margin-top: auto; }
+.tool-arrow { font-size: .74rem; font-weight: 700; color: var(--accent); margin-top: auto; }
 
 /* ── Scroll hint ── */
 .scroll-hint {
@@ -185,7 +202,7 @@ body.light .how-section { background: rgba(0,0,0,.018); border-top-color: rgba(0
 .how-heading { text-align: center; margin-bottom: 52px; }
 .how-label {
   font-size: .66rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
-  color: #3b82f6; margin-bottom: 12px;
+  color: var(--accent); margin-bottom: 12px;
 }
 .how-title {
   font-family: 'Syne', sans-serif; font-size: 2.1rem; font-weight: 800;
@@ -196,7 +213,7 @@ body.light .how-section { background: rgba(0,0,0,.018); border-top-color: rgba(0
 /* ── How card ── */
 .how-card {
   background: var(--surface);
-  border: 1px solid rgba(37,99,235,.16);
+  border: 1px solid rgba(45,212,191,.14);
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
@@ -207,9 +224,9 @@ body.light .how-card { background: #fff; }
   display: flex; align-items: center; gap: 14px;
   padding: 22px 26px 20px;
   border-bottom: 1px solid var(--border);
-  background: rgba(37,99,235,.055);
+  background: rgba(45,212,191,.05);
 }
-body.light .how-card-head { background: rgba(37,99,235,.04); }
+body.light .how-card-head { background: rgba(13,148,136,.04); }
 .how-card-icon { font-size: 1.55rem; }
 .how-card-title {
   font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800;
@@ -217,8 +234,8 @@ body.light .how-card-head { background: rgba(37,99,235,.04); }
 }
 .how-card-tag {
   font-size: .6rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
-  background: rgba(37,99,235,.14); color: #60a5fa;
-  border: 1px solid rgba(37,99,235,.28); border-radius: 100px; padding: 3px 10px;
+  background: rgba(45,212,191,.12); color: var(--accent);
+  border: 1px solid rgba(45,212,191,.28); border-radius: 100px; padding: 3px 10px;
 }
 
 .how-card-body { padding: 0 26px; }
@@ -246,7 +263,7 @@ body.light .how-card-head { background: rgba(37,99,235,.04); }
   font-size: .64rem; font-weight: 600; padding: 3px 10px; border-radius: 4px;
   border: 1px solid var(--border2); color: var(--text2); background: var(--surface2);
 }
-.tag.blue   { background: rgba(59,130,246,.1);  border-color: rgba(59,130,246,.3);  color: #60a5fa; }
+.tag.blue   { background: rgba(45,212,191,.1);  border-color: rgba(45,212,191,.3);  color: var(--accent); }
 .tag.green  { background: rgba(34,197,94,.1);   border-color: rgba(34,197,94,.3);   color: #4ade80; }
 .tag.amber  { background: rgba(245,158,11,.1);  border-color: rgba(245,158,11,.3);  color: #fbbf24; }
 .tag.red    { background: rgba(239,68,68,.1);   border-color: rgba(239,68,68,.3);   color: #f87171; }
@@ -255,13 +272,13 @@ body.light .how-card-head { background: rgba(37,99,235,.04); }
 .how-card-footer { padding: 18px 26px 24px; border-top: 1px solid var(--border); }
 .open-btn {
   display: inline-flex; align-items: center; gap: 6px;
-  background: rgba(37,99,235,.12); border: 1px solid rgba(37,99,235,.32);
-  color: #60a5fa; border-radius: var(--radius-sm); padding: 9px 18px;
+  background: rgba(45,212,191,.10); border: 1px solid rgba(45,212,191,.30);
+  color: var(--accent); border-radius: var(--radius-sm); padding: 9px 18px;
   font-size: .76rem; font-weight: 700; text-decoration: none; transition: all .15s;
 }
 .open-btn:hover {
-  background: rgba(37,99,235,.22); border-color: rgba(37,99,235,.55);
-  color: #93c5fd; box-shadow: 0 0 20px rgba(37,99,235,.2);
+  background: rgba(45,212,191,.18); border-color: rgba(45,212,191,.55);
+  color: #5eead4; box-shadow: 0 0 20px rgba(45,212,191,.15);
 }
 
 /* ══════════════ FOOTER ══════════════ */
@@ -424,9 +441,9 @@ body.light .how-card-head { background: rgba(37,99,235,.04); }
         <!-- WHAT YOU GET -->
         <div class="info-block">
           <div class="info-block-label out"><span>What You Get</span></div>
-          <p>A 2-sheet Excel export (.xlsx):</p>
+          <p>A 2–3 sheet Excel export (.xlsx):</p>
           <p><strong style="color:#4ade80;">"RFM Report" sheet</strong> — full comparison table with all RFM columns plus matched PO data: Item Req No, Make, Part No, Description, Scope, Section, Customer, OR No, Project Qty, PO Qty, PO No, Supplier, Used Qty, Return Qty, % Returned, Unit Price, Total Amt Returned. Each row is colour-coded by match status.</p>
-          <p><strong style="color:#4ade80;">"Summary" sheet</strong> — project details panel and a high-level count of matched, excess, short, and no-PO parts.</p>
+          <p><strong style="color:#4ade80;">"Summary" sheet</strong> — project KPIs with auto-calculated cost percentages. <strong style="color:#f87171;">"Unmatched Parts" sheet</strong> — only included when RFM contains parts with no matching PO entry, flagging what was returned but never ordered.</p>
           <div class="tag-row">
             <span class="tag green">RFM Report sheet</span>
             <span class="tag green">Summary sheet</span>
