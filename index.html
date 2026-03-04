@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workezz — Tool Suite</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+/* ── DESIGN TOKENS ── */
+:root {
+  --bg:       #07090f;
+  --surface:  rgba(255,255,255,.035);
+  --surface2: rgba(255,255,255,.06);
+  --border:   rgba(255,255,255,.07);
+  --border2:  rgba(255,255,255,.13);
+  --text:     #f1f5f9;
+  --text2:    #94a3b8;
+  --muted:    #475569;
+  --accent:   #2563eb;
+  --accent-l: rgba(37,99,235,.1);
+  --radius:   12px;
+  --radius-sm:7px;
+  --shadow:   0 2px 16px rgba(0,0,0,.35);
+  --shadow-md:0 8px 40px rgba(0,0,0,.45);
+}
+body.light {
+  --bg:       #f0f4ff;
+  --surface:  #ffffff;
+  --surface2: rgba(0,0,0,.04);
+  --border:   rgba(0,0,0,.07);
+  --border2:  rgba(0,0,0,.13);
+  --text:     #0f172a;
+  --text2:    #475569;
+  --muted:    #94a3b8;
+  --shadow:   0 2px 12px rgba(0,0,0,.08);
+  --shadow-md:0 8px 32px rgba(0,0,0,.12);
+}
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── BACKGROUND GLOW ── */
+.bg-layer {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% -5%,  rgba(37,99,235,.16) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 35% at 85% 85%, rgba(139,92,246,.1)  0%, transparent 60%);
+}
+body.light .bg-layer {
+  background: radial-gradient(ellipse 70% 50% at 50% -5%, rgba(37,99,235,.09) 0%, transparent 70%);
+}
+
+/* ══════════════ NAVBAR ══════════════ */
+.navbar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px; height: 56px;
+  background: rgba(7,9,15,.82);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(14px);
+}
+body.light .navbar { background: rgba(240,244,255,.88); }
+
+.nav-logo { display: flex; align-items: center; gap: 10px; }
+.nav-brand {
+  font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 800;
+  color: var(--text); letter-spacing: -.025em;
+}
+.nav-brand span { color: #3b82f6; }
+
+.nav-center { position: absolute; left: 50%; transform: translateX(-50%); }
+.nav-tag {
+  font-size: .66rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted); border: 1px solid var(--border2);
+  border-radius: 100px; padding: 4px 13px;
+}
+
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.nav-version { font-size: .67rem; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+.nav-toggle {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); padding: 5px 12px;
+  font-size: .72rem; font-weight: 600; color: var(--text2);
+  cursor: pointer; font-family: inherit; transition: all .15s;
+}
+.nav-toggle:hover { background: var(--accent-l); border-color: var(--accent); color: var(--accent); }
+
+/* ══════════════ HERO ══════════════ */
+.hero {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 72px 32px 80px; gap: 44px;
+}
+
+.hero-logo { text-align: center; }
+.logo-text {
+  font-family: 'Syne', sans-serif; font-size: 3.8rem; font-weight: 800;
+  color: var(--text); letter-spacing: -.045em; line-height: 1;
+}
+.logo-text span { color: #3b82f6; }
+.logo-sub { margin-top: 16px; font-size: .86rem; color: var(--muted); max-width: 480px; line-height: 1.7; }
+
+/* ── Single card centering ── */
+.cards-single { display: flex; justify-content: center; width: 100%; max-width: 420px; }
+
+/* ── Tool card ── */
+.tool-card {
+  width: 100%;
+  display: flex; flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 26px 28px 24px;
+  text-decoration: none; color: inherit;
+  transition: transform .2s, box-shadow .2s, border-color .2s;
+  position: relative; overflow: hidden;
+}
+.tool-card::after {
+  content: ''; position: absolute; inset: 0; border-radius: var(--radius);
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(37,99,235,.09) 0%, transparent 70%);
+  opacity: 0; transition: opacity .25s; pointer-events: none;
+}
+.tool-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(37,99,235,.42);
+  box-shadow: 0 20px 60px rgba(37,99,235,.18);
+}
+.tool-card:hover::after { opacity: 1; }
+body.light .tool-card { background: #fff; box-shadow: var(--shadow); }
+
+.tool-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.tool-icon { font-size: 2rem; }
+.tool-tag {
+  font-size: .6rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  border-radius: 100px; padding: 3px 11px;
+  background: rgba(37,99,235,.14); color: #60a5fa; border: 1px solid rgba(37,99,235,.28);
+}
+.tool-name {
+  font-family: 'Syne', sans-serif; font-size: 1.22rem; font-weight: 800;
+  color: var(--text); margin-bottom: 10px; letter-spacing: -.015em;
+}
+.tool-desc { font-size: .8rem; color: var(--muted); line-height: 1.68; margin-bottom: 22px; flex: 1; }
+.tool-arrow { font-size: .74rem; font-weight: 700; color: #3b82f6; margin-top: auto; }
+
+/* ── Scroll hint ── */
+.scroll-hint {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  cursor: pointer; color: var(--muted); opacity: .55; transition: opacity .2s;
+  font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+}
+.scroll-hint:hover { opacity: 1; }
+.scroll-arrow {
+  width: 8px; height: 8px;
+  border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  animation: bob 1.6s ease-in-out infinite;
+}
+@keyframes bob {
+  0%,100% { transform: rotate(45deg) translate(0,0); }
+  50%      { transform: rotate(45deg) translate(2px,2px); }
+}
+
+/* ══════════════ HOW-TO SECTION ══════════════ */
+.how-section {
+  position: relative; z-index: 1;
+  background: rgba(255,255,255,.018);
+  border-top: 1px solid var(--border);
+  padding: 80px 32px 100px;
+}
+body.light .how-section { background: rgba(0,0,0,.018); border-top-color: rgba(0,0,0,.06); }
+.how-inner { max-width: 720px; margin: 0 auto; }
+
+.how-heading { text-align: center; margin-bottom: 52px; }
+.how-label {
+  font-size: .66rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: #3b82f6; margin-bottom: 12px;
+}
+.how-title {
+  font-family: 'Syne', sans-serif; font-size: 2.1rem; font-weight: 800;
+  color: var(--text); letter-spacing: -.035em; margin-bottom: 12px;
+}
+.how-sub { font-size: .84rem; color: var(--muted); line-height: 1.65; }
+
+/* ── How card ── */
+.how-card {
+  background: var(--surface);
+  border: 1px solid rgba(37,99,235,.16);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+body.light .how-card { background: #fff; }
+
+.how-card-head {
+  display: flex; align-items: center; gap: 14px;
+  padding: 22px 26px 20px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(37,99,235,.055);
+}
+body.light .how-card-head { background: rgba(37,99,235,.04); }
+.how-card-icon { font-size: 1.55rem; }
+.how-card-title {
+  font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800;
+  color: var(--text); flex: 1;
+}
+.how-card-tag {
+  font-size: .6rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  background: rgba(37,99,235,.14); color: #60a5fa;
+  border: 1px solid rgba(37,99,235,.28); border-radius: 100px; padding: 3px 10px;
+}
+
+.how-card-body { padding: 0 26px; }
+
+.info-block { padding: 20px 0 16px; }
+.info-block:first-child { padding-top: 24px; }
+.info-block p { font-size: .8rem; color: var(--text2); line-height: 1.72; margin-bottom: 8px; }
+.info-block p:last-of-type { margin-bottom: 0; }
+.info-block p + p { margin-top: 10px; }
+
+.divider { height: 1px; background: var(--border); margin: 0 -26px; }
+
+.info-block-label { display: inline-flex; align-items: center; margin-bottom: 10px; }
+.info-block-label span {
+  font-size: .63rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  border-radius: 4px; padding: 3px 9px;
+}
+.info-block-label.what span { background: rgba(59,130,246,.12);  color: #60a5fa; }
+.info-block-label.req  span { background: rgba(245,158,11,.12);  color: #fbbf24; }
+.info-block-label.fmt  span { background: rgba(139,92,246,.12);  color: #a78bfa; }
+.info-block-label.out  span { background: rgba(34,197,94,.12);   color: #4ade80; }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+.tag {
+  font-size: .64rem; font-weight: 600; padding: 3px 10px; border-radius: 4px;
+  border: 1px solid var(--border2); color: var(--text2); background: var(--surface2);
+}
+.tag.blue   { background: rgba(59,130,246,.1);  border-color: rgba(59,130,246,.3);  color: #60a5fa; }
+.tag.green  { background: rgba(34,197,94,.1);   border-color: rgba(34,197,94,.3);   color: #4ade80; }
+.tag.amber  { background: rgba(245,158,11,.1);  border-color: rgba(245,158,11,.3);  color: #fbbf24; }
+.tag.red    { background: rgba(239,68,68,.1);   border-color: rgba(239,68,68,.3);   color: #f87171; }
+.tag.purple { background: rgba(139,92,246,.1);  border-color: rgba(139,92,246,.3);  color: #a78bfa; }
+
+.how-card-footer { padding: 18px 26px 24px; border-top: 1px solid var(--border); }
+.open-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(37,99,235,.12); border: 1px solid rgba(37,99,235,.32);
+  color: #60a5fa; border-radius: var(--radius-sm); padding: 9px 18px;
+  font-size: .76rem; font-weight: 700; text-decoration: none; transition: all .15s;
+}
+.open-btn:hover {
+  background: rgba(37,99,235,.22); border-color: rgba(37,99,235,.55);
+  color: #93c5fd; box-shadow: 0 0 20px rgba(37,99,235,.2);
+}
+
+/* ══════════════ FOOTER ══════════════ */
+.page-footer {
+  position: relative; z-index: 1; margin-top: auto;
+  text-align: center; padding: 22px 24px;
+  font-size: .71rem; color: var(--muted);
+  border-top: 1px solid var(--border);
+}
+.page-footer strong { color: var(--text2); }
+
+</style>
+</head>
+<body>
+
+<!-- BG layer -->
+<div class="bg-layer"></div>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar">
+  <div class="nav-logo">
+    <svg width="28" height="28" viewBox="0 0 48 48" fill="none">
+      <rect width="48" height="48" rx="11" fill="#2563eb"/>
+      <path d="M10 15L18 33L24 19.5L30 33L38 15" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="24" cy="19.5" r="2.5" fill="white"/>
+    </svg>
+    <span class="nav-brand">Work<span>ezz</span></span>
+  </div>
+  <div class="nav-center">
+    <span class="nav-tag">PM Tools Suite</span>
+  </div>
+  <div class="nav-right">
+    <span class="nav-version">v1.1</span>
+    <button class="nav-toggle" id="modeBtn" onclick="toggleMode()">
+      <span id="modeIcon">☀️</span>
+      <span id="modeLbl">Light</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+
+  <div class="hero-logo">
+    <div class="logo-text">Work<span>ezz</span></div>
+    <p class="logo-sub">Browser-based tools for Project Management — no installs, no server uploads.</p>
+  </div>
+
+  <!-- Single RFM Tool card -->
+  <div class="cards-single">
+    <a class="tool-card" href="rfm_tool.html">
+      <div class="tool-card-top">
+        <div class="tool-icon">📋</div>
+        <span class="tool-tag">New</span>
+      </div>
+      <div class="tool-name">RFM Tool</div>
+      <div class="tool-desc">Upload a Return from Manufacturing slip and a Purchase Order file — compare returned quantities against what was ordered per part number. Duplicate PO entries are summed automatically. Export a colour-coded report in one click.</div>
+      <div class="tool-arrow">Open Tool →</div>
+    </a>
+  </div>
+
+  <div class="scroll-hint" onclick="document.getElementById('howto').scrollIntoView({behavior:'smooth'})">
+    <span>How to use</span>
+    <div class="scroll-arrow"></div>
+  </div>
+
+</section>
+
+<!-- ══ HOW TO USE ══ -->
+<section class="how-section" id="howto">
+  <div class="how-inner">
+
+    <div class="how-heading">
+      <div class="how-label">Documentation</div>
+      <div class="how-title">How to Use the RFM Tool</div>
+      <p class="how-sub">Everything you need to know — inputs, file formats, and what you get out.</p>
+    </div>
+
+    <!-- Single how-card for RFM Tool -->
+    <div class="how-card">
+
+      <div class="how-card-head">
+        <div class="how-card-icon">📋</div>
+        <div class="how-card-title">RFM Tool</div>
+        <span class="how-card-tag">New</span>
+      </div>
+
+      <div class="how-card-body">
+
+        <!-- WHAT IT DOES -->
+        <div class="info-block">
+          <div class="info-block-label what"><span>What It Does</span></div>
+          <p>Compares a Return from Manufacturing (RFM) slip against your Purchase Order file to verify quantities — showing exactly how many units were ordered vs how many are being physically returned, per part number. Parts with no matching PO entry are flagged separately. Duplicate PO rows for the same part are automatically summed before comparison.</p>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- REQUIREMENTS -->
+        <div class="info-block">
+          <div class="info-block-label req"><span>Requirements</span></div>
+          <p>One RFM file containing the <strong>"Return Mat Slip"</strong> sheet. One PO file containing the <strong>"PO_Status"</strong> sheet. Both uploads can be the same file — the tool reads each sheet independently. All formats supported.</p>
+          <div class="tag-row">
+            <span class="tag amber">1 RFM file</span>
+            <span class="tag amber">1 PO file</span>
+            <span class="tag blue">.xlsx</span>
+            <span class="tag blue">.xls</span>
+            <span class="tag blue">.xlsb</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- FORMAT: RFM -->
+        <div class="info-block">
+          <div class="info-block-label fmt"><span>RFM File Format</span></div>
+          <p>Sheet name: <strong>"Return Mat Slip"</strong>. Rows 1–9 are meta/header rows and are automatically skipped. Data begins at row 13. Expected columns:</p>
+          <p>Col A = Item Req No &nbsp;·&nbsp; Col B = Make &nbsp;·&nbsp; Col C = Type/Order No (Part Number) &nbsp;·&nbsp; Col D = Description &nbsp;·&nbsp; Col E = Scope &nbsp;·&nbsp; Col F = Section &nbsp;·&nbsp; Col G = Return Qty &nbsp;·&nbsp; Col H = Unit For Qty</p>
+          <div class="tag-row">
+            <span class="tag">Sheet: Return Mat Slip</span>
+            <span class="tag">Data from row 13</span>
+            <span class="tag">Col C → Part No</span>
+            <span class="tag">Col G → Return Qty</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- FORMAT: PO -->
+        <div class="info-block">
+          <div class="info-block-label fmt"><span>PO File Format</span></div>
+          <p>Sheet name: <strong>"PO_Status"</strong>. Rows 1–4 are header/meta rows. Data begins at row 5. Expected columns:</p>
+          <p>Col D = Type/Order No (Part Number) &nbsp;·&nbsp; Col I = PO Qty &nbsp;·&nbsp; Col J = PO No &nbsp;·&nbsp; Col K = Supplier &nbsp;·&nbsp; Col L = Pending Qty. If the same part number appears on multiple rows, all PO Qty values are summed automatically.</p>
+          <div class="tag-row">
+            <span class="tag">Sheet: PO_Status</span>
+            <span class="tag">Data from row 5</span>
+            <span class="tag">Col D → Part No</span>
+            <span class="tag">Col I → PO Qty</span>
+            <span class="tag">Duplicates summed</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- PROJECT DETAILS -->
+        <div class="info-block">
+          <div class="info-block-label req"><span>Project Details (Optional)</span></div>
+          <p>Step 1 includes a <strong>Project Details</strong> panel with six fields — PM Name, HW Team Lead, Client Name, Order Value, Projected Material Cost, and Actual Material Cost. These are optional and only populate the <strong>Summary</strong> sheet inside the exported Excel.</p>
+          <div class="tag-row">
+            <span class="tag">PM Name</span>
+            <span class="tag">HW TL</span>
+            <span class="tag">Client Name</span>
+            <span class="tag">Order Value</span>
+            <span class="tag">Projected Cost</span>
+            <span class="tag">Actual Cost</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- WHAT YOU GET -->
+        <div class="info-block">
+          <div class="info-block-label out"><span>What You Get</span></div>
+          <p>A 2-sheet Excel export (.xlsx):</p>
+          <p><strong style="color:#4ade80;">"RFM Report" sheet</strong> — full comparison table with all RFM columns plus matched PO data: Item Req No, Make, Part No, Description, Scope, Section, Customer, OR No, Project Qty, PO Qty, PO No, Supplier, Used Qty, Return Qty, % Returned, Unit Price, Total Amt Returned. Each row is colour-coded by match status.</p>
+          <p><strong style="color:#4ade80;">"Summary" sheet</strong> — project details panel and a high-level count of matched, excess, short, and no-PO parts.</p>
+          <div class="tag-row">
+            <span class="tag green">RFM Report sheet</span>
+            <span class="tag green">Summary sheet</span>
+            <span class="tag green">Colour-coded rows</span>
+            <span class="tag green">Summed PO Qty</span>
+            <span class="tag red">Short flagged</span>
+            <span class="tag blue">Excess flagged</span>
+          </div>
+        </div>
+
+      </div><!-- /.how-card-body -->
+
+      <div class="how-card-footer">
+        <a class="open-btn" href="rfm_tool.html">Open RFM Tool →</a>
+      </div>
+
+    </div><!-- /.how-card -->
+
+  </div><!-- /.how-inner -->
+</section>
+
+<footer class="page-footer">
+  Designed &amp; built by <strong>Krish Makwane</strong> &nbsp;·&nbsp; Workezz v2.0 &nbsp;·&nbsp; All processing is local — your files never leave your browser.
+</footer>
+
+<script>
+function toggleMode() {
+  var isLight = document.body.classList.toggle('light');
+  document.getElementById('modeIcon').textContent = isLight ? '🌙' : '☀️';
+  document.getElementById('modeLbl').textContent  = isLight ? 'Dark' : 'Light';
+  try { localStorage.setItem('wz-theme', isLight ? 'light' : 'dark'); } catch(e) {}
+}
+(function() {
+  try {
+    var saved = localStorage.getItem('wz-theme');
+    if (saved === 'light') {
+      document.body.classList.add('light');
+      document.getElementById('modeIcon').textContent = '🌙';
+      document.getElementById('modeLbl').textContent  = 'Dark';
+    }
+  } catch(e) {}
+})();
+</script>
+
+</body>
+</html>

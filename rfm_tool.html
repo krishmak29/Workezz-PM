@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workezz — RFM Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<style>
+/* ── LIGHT MODE ── */
+:root {
+  --bg:#f8fafc;--surface:#ffffff;--surface2:#f1f5f9;--border:#e2e8f0;--border2:#cbd5e1;
+  --text:#0f172a;--text2:#334155;--muted:#94a3b8;
+  --accent:#6366f1;--accent-d:#4f46e5;--accent-l:#eef2ff;
+  --success:#16a34a;--danger:#dc2626;--warning:#d97706;
+  --radius:12px;--radius-sm:8px;
+  --shadow:0 1px 3px rgba(15,23,42,.08),0 1px 2px rgba(15,23,42,.04);
+  --shadow-md:0 4px 16px rgba(15,23,42,.1);
+}
+
+/* ── DARK MODE — indigo/glass palette ── */
+body.dark {
+  --bg:#020818;
+  --surface:rgba(255,255,255,.04);
+  --surface2:rgba(255,255,255,.07);
+  --border:rgba(255,255,255,.08);
+  --border2:rgba(255,255,255,.12);
+  --text:#f1f5f9;
+  --text2:#cbd5e1;
+  --muted:rgba(255,255,255,.35);
+  --accent:#818cf8;
+  --accent-d:#6366f1;
+  --accent-l:rgba(99,102,241,.15);
+  --shadow:0 1px 3px rgba(0,0,0,.4);
+  --shadow-md:0 4px 20px rgba(0,0,0,.5);
+}
+body.dark { background: #020818; }
+body.dark::before {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 20% 20%, rgba(99,102,241,.14) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 50% at 80% 80%, rgba(168,85,247,.09) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 40% at 60% 5%,  rgba(59,130,246,.08) 0%, transparent 40%);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;min-height:100vh;font-size:14px;}
+
+/* ── HEADER ── */
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:var(--shadow);z-index:10;position:relative;backdrop-filter:blur(12px);}
+.logo{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--text);letter-spacing:-.02em;}
+.logo span{color:var(--accent);}
+.logo-sub{font-size:.63rem;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:1px;}
+.dark-toggle{display:flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:5px 11px;font-size:.72rem;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s;backdrop-filter:blur(8px);}
+.home-btn{display:flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:5px 11px;font-size:.72rem;font-weight:600;color:var(--text2);text-decoration:none;cursor:pointer;transition:all .15s;backdrop-filter:blur(8px);}
+.home-btn:hover,.dark-toggle:hover{background:var(--accent-l);border-color:var(--accent);color:var(--accent);}
+
+/* ── STEPPER ── */
+.stepper{display:flex;align-items:center;gap:0;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;position:relative;z-index:9;backdrop-filter:blur(12px);}
+.step{display:flex;align-items:center;gap:8px;font-size:.75rem;font-weight:600;color:var(--muted);padding:13px 22px;border-bottom:2px solid transparent;transition:all .2s;cursor:pointer;}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--border2);color:var(--muted);font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.step.active{color:var(--accent);border-bottom-color:var(--accent);}
+.step.active .step-num{background:var(--accent);color:#fff;}
+.step.done{color:var(--success);}
+.step.done .step-num{background:var(--success);color:#fff;}
+.step-arrow{color:var(--muted);font-size:.9rem;opacity:.4;}
+
+/* ── SCREENS ── */
+.screen{display:none;flex:1;flex-direction:column;overflow:hidden;position:relative;z-index:1;}
+.screen.active{display:flex;}
+
+/* ── SCREEN 1 — Layout D: centered narrow column ── */
+.s1-wrap{flex:1;overflow-y:auto;padding:28px 24px;display:flex;justify-content:center;}
+.s1-inner{width:100%;max-width:740px;display:flex;flex-direction:column;gap:16px;}
+.s1-file-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.s1-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow);backdrop-filter:blur(12px);transition:border-color .2s;}
+body.dark .s1-panel{box-shadow:0 4px 24px rgba(0,0,0,.3);}
+.s1-panel:hover{border-color:var(--border2);}
+.panel-title{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:800;color:var(--text);margin-bottom:2px;}
+.panel-sub{font-size:.68rem;color:var(--muted);}
+
+/* ── UPLOAD ZONE ── */
+.upload-zone{border:1.5px dashed var(--border2);border-radius:var(--radius-sm);padding:22px 16px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface2);}
+.upload-zone:hover{border-color:var(--accent);background:var(--accent-l);}
+.uz-icon{font-size:1.8rem;display:block;margin-bottom:6px;}
+.uz-text{font-size:.78rem;font-weight:600;color:var(--text2);margin-bottom:3px;}
+.uz-sub{font-size:.65rem;color:var(--muted);}
+.file-chip{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;}
+.fc-icon{width:32px;height:32px;border-radius:6px;background:var(--accent);color:#fff;font-size:.56rem;font-weight:800;font-family:'IBM Plex Mono',monospace;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fc-info{flex:1;min-width:0;}
+.fc-name{font-size:.73rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.fc-sub{font-size:.62rem;color:var(--muted);margin-top:1px;}
+
+/* ── PROJECT DETAILS PANEL ── */
+.proj-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.proj-item{display:flex;flex-direction:column;gap:5px;}
+.proj-label{font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+.proj-field{border:1px solid var(--border2);border-radius:var(--radius-sm);padding:8px 11px;font-family:'DM Sans',sans-serif;font-size:.82rem;color:var(--text);background:var(--surface2);outline:none;width:100%;transition:all .2s;}
+.proj-field:focus{border-color:var(--accent);background:var(--accent-l);box-shadow:0 0 0 3px rgba(99,102,241,.12);}
+.proj-field::placeholder{color:var(--muted);opacity:.6;}
+body.dark .proj-field{background:rgba(255,255,255,.05);}
+body.dark .proj-field:focus{background:rgba(99,102,241,.1);}
+
+/* ── FOOTER ── */
+.s1-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 24px;background:var(--surface);border-top:1px solid var(--border);flex-shrink:0;position:relative;z-index:1;backdrop-filter:blur(12px);}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid transparent;border-radius:var(--radius-sm);padding:7px 16px;font-size:.78rem;font-weight:600;font-family:inherit;cursor:pointer;transition:all .18s;text-decoration:none;}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 10px rgba(99,102,241,.3);}
+.btn-primary:hover:not(:disabled){background:var(--accent-d);transform:translateY(-1px);box-shadow:0 4px 16px rgba(99,102,241,.4);}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
+.btn-secondary{background:var(--surface2);color:var(--text2);border-color:var(--border2);}
+.btn-secondary:hover{background:var(--border);}
+.btn-success{background:#16a34a;color:#fff;border-color:#16a34a;box-shadow:0 2px 10px rgba(22,163,74,.25);}
+.btn-success:hover:not(:disabled){background:#15803d;transform:translateY(-1px);}
+.btn-success:disabled{opacity:.4;cursor:not-allowed;}
+.btn-danger-outline{background:transparent;color:var(--danger);border-color:#fca5a5;font-size:.68rem;padding:4px 8px;}
+.btn-danger-outline:hover{background:#fef2f2;}
+.btn-lg{padding:10px 24px;font-size:.84rem;}
+.btn-full{width:100%;justify-content:center;}
+
+/* ── SCREEN 2 ── */
+.s2-layout{display:flex;flex-direction:column;flex:1;overflow:hidden;}
+.s2-toolbar{display:flex;align-items:center;gap:8px;padding:10px 20px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;backdrop-filter:blur(12px);}
+.stats-bar{display:flex;gap:10px;flex-wrap:wrap;padding:14px 20px;flex-shrink:0;}
+.stat-card{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;min-width:110px;box-shadow:var(--shadow);backdrop-filter:blur(8px);}
+.stat-icon{font-size:1.3rem;}
+.stat-val{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;color:var(--text);line-height:1;}
+.stat-label{font-size:.62rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px;}
+.s2-content{flex:1;overflow-y:auto;padding:16px 20px;}
+.section-block{margin-bottom:20px;}
+.section-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.section-head h3{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:800;color:var(--text);}
+.section-badge{font-size:.65rem;font-weight:700;background:var(--accent-l);color:var(--accent);border-radius:100px;padding:2px 9px;}
+.viz-table{width:100%;border-collapse:collapse;font-size:.76rem;}
+.viz-table th{background:#1e3a5f;color:#e2e8f0;font-size:.66rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:8px 10px;text-align:left;white-space:nowrap;position:sticky;top:0;z-index:2;}
+body.dark .viz-table th{background:rgba(99,102,241,.4);}
+.viz-table td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.viz-table tr:hover td{background:var(--accent-l);}
+.td-mono{font-family:'IBM Plex Mono',monospace;font-size:.72rem;font-weight:500;color:#1e3a5f;}
+body.dark .td-mono{color:#a5b4fc;}
+.td-center{text-align:center;}
+.pill{display:inline-flex;align-items:center;gap:4px;border-radius:4px;padding:2px 9px;font-size:.68rem;font-weight:700;}
+.pill-exact{background:#fef9c3;color:#854d0e;border:1px solid #fde68a;}
+.pill-short{background:#fce7f3;color:#9d174d;border:1px solid #fbcfe8;}
+.pill-excess{background:#dcfce7;color:#15803d;border:1px solid #86efac;}
+.pill-no-po{background:#f1f5f9;color:#64748b;border:1px solid #cbd5e1;}
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px;color:var(--muted);font-size:.82rem;text-align:center;gap:10px;}
+
+/* ── SCREEN 3 ── */
+.s3-layout{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:12px;padding:32px;}
+.export-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px 36px;max-width:500px;width:100%;text-align:center;box-shadow:var(--shadow-md);backdrop-filter:blur(12px);}
+.export-card h2{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:8px;}
+.export-card p{font-size:.78rem;color:var(--muted);margin-bottom:18px;line-height:1.6;}
+.export-summary{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;padding:14px;background:var(--surface2);border-radius:var(--radius-sm);}
+.exp-item-val{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;}
+.exp-item-label{font-size:.62rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;}
+
+/* ── MISC ── */
+.col-map-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px 14px;}
+.section-label{font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+footer{background:var(--surface);border-top:1px solid var(--border);padding:9px 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:relative;z-index:1;backdrop-filter:blur(12px);}
+</style>
+</head>
+<body>
+
+<header>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#6366f1"/><path d="M7 10L12 22L16 13L20 22L25 10" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16" cy="13" r="1.5" fill="white"/></svg>
+    <div><div class="logo">Work<span>ezz</span></div><div class="logo-sub">RFM Tracker</div></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <button class="dark-toggle" onclick="toggleDark()"><span id="darkIcon">🌙</span><span id="darkLabel">Dark Mode</span></button>
+    <a class="home-btn" href="index.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+  </div>
+</header>
+
+<div class="stepper">
+  <div class="step active" id="step1"><div class="step-num">1</div> Import Files</div>
+  <div class="step" id="step2"><div class="step-num">2</div> Compare</div>
+  <div class="step" id="step3"><div class="step-num">3</div> Export</div>
+</div>
+
+<!-- SCREEN 1 -->
+<div class="screen active" id="screen1">
+  <div class="s1-wrap">
+    <div class="s1-inner">
+
+      <!-- File uploads side by side -->
+      <div class="s1-file-row">
+        <div class="s1-panel">
+          <div>
+            <div class="panel-title">📋 RFM File</div>
+            <div class="panel-sub">Return Mat Slip · Part No col C · Data row 13</div>
+          </div>
+          <input type="file" id="rfmInput" accept=".xls,.xlsx,.xlsb" style="display:none;" onchange="handleRFM(this)">
+          <div id="rfmEmptyZone" class="upload-zone" onclick="document.getElementById('rfmInput').click()">
+            <span class="uz-icon">📋</span>
+            <div class="uz-text">Click to upload RFM</div>
+            <div class="uz-sub">.xls / .xlsx / .xlsb</div>
+          </div>
+          <div id="rfmChip" class="file-chip" style="display:none;">
+            <div class="fc-icon" id="rfmExt">XLS</div>
+            <div class="fc-info"><div class="fc-name" id="rfmName">—</div><div class="fc-sub" id="rfmSize">—</div></div>
+            <button class="btn btn-danger-outline" onclick="clearRFM()">✕</button>
+          </div>
+          <div id="rfmPreview" style="display:none;background:#dcfce7;border:1px solid #86efac;border-radius:6px;padding:8px 12px;font-size:.72rem;color:#15803d;"></div>
+        </div>
+
+        <div class="s1-panel">
+          <div>
+            <div class="panel-title">🧾 PO File</div>
+            <div class="panel-sub">PO_Status · Part No col D · Data row 5</div>
+          </div>
+          <input type="file" id="poInput" accept=".xls,.xlsx,.xlsb" style="display:none;" onchange="handlePO(this)">
+          <div id="poEmptyZone" class="upload-zone" onclick="document.getElementById('poInput').click()">
+            <span class="uz-icon">🧾</span>
+            <div class="uz-text">Click to upload PO</div>
+            <div class="uz-sub">.xls / .xlsx / .xlsb</div>
+          </div>
+          <div id="poChip" class="file-chip" style="display:none;">
+            <div class="fc-icon" id="poExt" style="background:#a855f7;">XLS</div>
+            <div class="fc-info"><div class="fc-name" id="poName">—</div><div class="fc-sub" id="poSize">—</div></div>
+            <button class="btn btn-danger-outline" onclick="clearPO()">✕</button>
+          </div>
+          <div id="poPreview" style="display:none;background:#ede9fe;border:1px solid #c4b5fd;border-radius:6px;padding:8px 12px;font-size:.72rem;color:#5b21b6;"></div>
+        </div>
+      </div>
+
+      <!-- Project Details full width, 3+3 grid -->
+      <div class="s1-panel">
+        <div>
+          <div class="panel-title">📝 Project Details</div>
+          <div class="panel-sub">Populates the Summary sheet in the exported Excel</div>
+        </div>
+        <div class="proj-grid-3">
+          <div class="proj-item">
+            <span class="proj-label">PM Name</span>
+            <input class="proj-field" id="inputPM" type="text" placeholder="Project Manager" oninput="saveSettings()">
+          </div>
+          <div class="proj-item">
+            <span class="proj-label">HW TL</span>
+            <input class="proj-field" id="inputHWTL" type="text" placeholder="HW Team Lead" oninput="saveSettings()">
+          </div>
+          <div class="proj-item">
+            <span class="proj-label">Client Name</span>
+            <input class="proj-field" id="inputClient" type="text" placeholder="Client name" oninput="saveSettings()">
+          </div>
+        </div>
+        <div class="proj-grid-3">
+          <div class="proj-item">
+            <span class="proj-label">Order Value</span>
+            <input class="proj-field" id="inputOrderValue" type="number" placeholder="e.g. 5000000" oninput="saveSettings()">
+          </div>
+          <div class="proj-item">
+            <span class="proj-label">Projected Mat. Cost</span>
+            <input class="proj-field" id="inputProjCost" type="number" placeholder="e.g. 3500000" oninput="saveSettings()">
+          </div>
+          <div class="proj-item">
+            <span class="proj-label">Actual Mat. Cost</span>
+            <input class="proj-field" id="inputActualCost" type="number" placeholder="e.g. 3200000" oninput="saveSettings()">
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="s1-footer">
+    <span id="s1hint" style="font-size:.74rem;color:var(--muted);">Upload both RFM and PO files to continue</span>
+    <button class="btn btn-primary btn-lg" id="processBtn" onclick="processData()" disabled>Compare ›</button>
+  </div>
+</div>
+
+<!-- SCREEN 2 -->
+<div class="screen" id="screen2">
+  <div class="s2-layout">
+    <div class="s2-toolbar">
+      <span style="font-size:.74rem;font-weight:600;color:var(--text2);">RFM Report Preview</span>
+      <div style="display:flex;gap:8px;margin-left:auto;">
+        <button class="btn btn-secondary" onclick="goTo(1)">‹ Back</button>
+        <button class="btn btn-primary" onclick="goTo(3)">Export ›</button>
+      </div>
+    </div>
+    <div class="stats-bar" id="statsBar"></div>
+    <div class="s2-content" id="vizContent">
+      <div class="empty-state">📋<p>Process data to see comparison</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 3 -->
+<div class="screen" id="screen3">
+  <div class="s3-layout">
+    <div class="export-card">
+      <div style="font-size:2.4rem;margin-bottom:10px;">📥</div>
+      <h2>Export RFM Report</h2>
+      <p>Exports a single sheet <strong>"RFM Report"</strong> with all columns:<br>
+      Item Req No · Make · Part No · Description · Scope · Section · Customer · OR Number · Project Qty · PO Qty · PO No · Supplier · Used Qty · Return Qty · % Returned · Unit Price · Total Amt Returned</p>
+      <div class="export-summary" id="exportSummary"></div>
+      <div style="margin-bottom:16px;text-align:left;">
+        <div style="font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Output File Name</div>
+        <div style="display:flex;align-items:center;border:1px solid var(--border2);border-radius:var(--radius-sm);overflow:hidden;">
+          <input id="exportFileName" type="text" value="RFM_Report" style="flex:1;border:none;outline:none;padding:9px 12px;font-family:'IBM Plex Sans',sans-serif;font-size:.82rem;color:var(--text);background:transparent;">
+          <span style="padding:9px 12px;font-size:.74rem;font-weight:600;color:var(--muted);background:var(--surface2);border-left:1px solid var(--border);">.xlsx</span>
+        </div>
+        <div style="font-size:.62rem;color:var(--muted);margin-top:4px;">✦ Auto-filled from RFM filename · edit freely</div>
+      </div>
+      <button class="btn btn-success btn-full btn-lg" id="exportBtn" onclick="exportExcel()">↓ Download Excel</button>
+    </div>
+    <button class="btn btn-secondary" onclick="goTo(2)">‹ Back to Compare</button>
+  </div>
+</div>
+
+<footer>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <svg width="16" height="16" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#6366f1"/><path d="M7 10L12 22L16 13L20 22L25 10" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16" cy="13" r="1.5" fill="white"/></svg>
+    <span style="font-size:.72rem;font-weight:700;font-family:'Syne',sans-serif;color:var(--text);">Workezz</span>
+    <span style="font-size:.68rem;color:var(--muted);">— RFM Tracker</span>
+  </div>
+  <div style="font-size:.68rem;color:var(--muted);">Designed &amp; built by <strong style="color:var(--text2);">Krish Makwane</strong> &nbsp;·&nbsp; MVP v1.1</div>
+</footer>
+
+<script>
+var rfmFile = null, poFile = null, processedData = null;
+
+// Handles single-letter cols (A=0) and two-letter cols (AG=32, etc.)
+function colIdx(l) {
+  l = (l || 'A').toUpperCase().trim();
+  if (l.length === 1) return l.charCodeAt(0) - 65;
+  return (l.charCodeAt(0) - 64) * 26 + (l.charCodeAt(1) - 65);
+}
+function fmtSz(b) { if(b<1024)return b+' B'; if(b<1048576)return (b/1024).toFixed(1)+' KB'; return (b/1048576).toFixed(1)+' MB'; }
+function todayStr() { return new Date().toISOString().slice(0,10); }
+
+// ── PERSIST ──
+var PKEYS = ['inputPM','inputHWTL','inputClient','inputOrderValue','inputProjCost','inputActualCost'];
+function saveSettings() {
+  try {
+    var obj = {};
+    PKEYS.forEach(function(k){ var el=document.getElementById(k); if(el) obj[k]=el.value; });
+    localStorage.setItem('wz-rfm-v2', JSON.stringify(obj));
+  } catch(e){}
+}
+function loadSettings() {
+  try {
+    var saved = localStorage.getItem('wz-rfm-v2');
+    if (!saved) return;
+    var obj = JSON.parse(saved);
+    PKEYS.forEach(function(k){ var el=document.getElementById(k); if(el&&obj[k]!==undefined&&obj[k]!=='') el.value=obj[k]; });
+  } catch(e){}
+}
+
+// ── READ EXCEL (xlsx / xls / xlsb — all via SheetJS) ──
+function readExcelSheet(file, preferredSheet) {
+  return new Promise(function(resolve) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        var wb = XLSX.read(e.target.result, {type:'array', cellDates:false});
+        var ws = null;
+        if (preferredSheet && wb.SheetNames.indexOf(preferredSheet) !== -1) {
+          ws = wb.Sheets[preferredSheet];
+        } else {
+          var best = null, bestN = 0;
+          for (var i = 0; i < wb.SheetNames.length; i++) {
+            var s = wb.Sheets[wb.SheetNames[i]];
+            var d = XLSX.utils.sheet_to_json(s,{header:1,defval:'',raw:true});
+            var n = d.filter(function(r){return r.some(function(v){return v!=='';});}).length;
+            if (n > bestN) { bestN = n; best = s; }
+          }
+          ws = best;
+        }
+        var data = XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:true});
+        resolve({data: data, sheetNames: wb.SheetNames});
+      } catch(err) { resolve({data:[], sheetNames:[]}); }
+    };
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+// ── FILE HANDLERS ──
+function handleRFM(input) {
+  if (!input.files.length) return;
+  rfmFile = input.files[0]; input.value = '';
+  var ext = rfmFile.name.split('.').pop().toUpperCase();
+  document.getElementById('rfmEmptyZone').style.display = 'none';
+  document.getElementById('rfmChip').style.display = 'flex';
+  document.getElementById('rfmExt').textContent = ext;
+  document.getElementById('rfmName').textContent = rfmFile.name;
+  document.getElementById('rfmSize').textContent = fmtSz(rfmFile.size);
+  var bare = rfmFile.name.replace(/\.(xlsx|xls|xlsb)$/i,'');
+  document.getElementById('exportFileName').value = 'RFM_' + bare.replace(/[^a-zA-Z0-9_\-]/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'');
+  readExcelSheet(rfmFile, 'Return Mat Slip').then(function(res) {
+    var count = res.data.slice(12).filter(function(r){return r.some(function(v){return v!=='';});}).length;
+    document.getElementById('rfmPreview').style.display = '';
+    document.getElementById('rfmPreview').innerHTML = '✓ <strong>' + count + ' RFM parts</strong> detected (sheet: Return Mat Slip)';
+  });
+  checkReady();
+}
+function clearRFM() {
+  rfmFile = null;
+  document.getElementById('rfmEmptyZone').style.display = '';
+  document.getElementById('rfmChip').style.display = 'none';
+  document.getElementById('rfmPreview').style.display = 'none';
+  document.getElementById('rfmInput').value = '';
+  checkReady();
+}
+function handlePO(input) {
+  if (!input.files.length) return;
+  poFile = input.files[0]; input.value = '';
+  var ext = poFile.name.split('.').pop().toUpperCase();
+  document.getElementById('poEmptyZone').style.display = 'none';
+  document.getElementById('poChip').style.display = 'flex';
+  document.getElementById('poExt').textContent = ext;
+  document.getElementById('poName').textContent = poFile.name;
+  document.getElementById('poSize').textContent = fmtSz(poFile.size);
+  readExcelSheet(poFile, 'PO_Status').then(function(res) {
+    var count = res.data.slice(4).filter(function(r){return r.some(function(v){return v!=='';});}).length;
+    document.getElementById('poPreview').style.display = '';
+    document.getElementById('poPreview').innerHTML = '✓ <strong>' + count + ' PO entries</strong> detected (sheet: PO_Status)';
+  });
+  checkReady();
+}
+function clearPO() {
+  poFile = null;
+  document.getElementById('poEmptyZone').style.display = '';
+  document.getElementById('poChip').style.display = 'none';
+  document.getElementById('poPreview').style.display = 'none';
+  document.getElementById('poInput').value = '';
+  checkReady();
+}
+function checkReady() {
+  var ok = !!(rfmFile && poFile);
+  document.getElementById('processBtn').disabled = !ok;
+  document.getElementById('s1hint').textContent =
+    !rfmFile ? 'Upload RFM file to continue' :
+    !poFile  ? 'Upload PO file to continue'  :
+               'Both files ready — click Compare';
+}
+
+// ── PROCESS ──
+async function processData() {
+  document.getElementById('processBtn').disabled = true;
+  document.getElementById('processBtn').textContent = 'Processing...';
+
+  // Fixed column indices — RFM "Return Mat Slip"
+  var rfmCI  = 0;   // A — Item Req No
+  var rfmCM  = 1;   // B — Make
+  var rfmCT  = 2;   // C — Part No
+  var rfmCD  = 3;   // D — Description
+  var rfmCSc = 4;   // E — Scope
+  var rfmCSe = 5;   // F — Section
+  var rfmCQ  = 6;   // G — Return Qty
+  var rfmOrRow = 5; // OR Number lives in col B (idx 1) of row 5
+  var rfmDR  = 13;  // data starts row 13
+
+  // Fixed column indices — PO "PO_Status"
+  var poCT   = 3;   // D — Part No
+  var poCCust= 11;  // L — Customer
+  var poCQ   = 14;  // O — PO Qty
+  var poCPN  = 15;  // P — PO No
+  var poCSup = 17;  // R — Supplier
+  var poCUP  = 32;  // AG — Unit Price
+  var poDR   = 5;   // data starts row 5
+
+  // Strip ^ prefix SheetJS adds to text-forced cells, lowercase, trim
+  function normPN(v) {
+    return String(v === null || v === undefined ? '' : v).replace(/^\^+/, '').trim().toLowerCase();
+  }
+
+  var res = await Promise.all([
+    readExcelSheet(rfmFile, 'Return Mat Slip'),
+    readExcelSheet(poFile,  'PO_Status')
+  ]);
+  var rfmData = res[0].data;
+  var poData  = res[1].data;
+
+  // OR Number: col B (idx 1) of row 5
+  var orNumber = String((rfmData[rfmOrRow - 1] || [])[1] || '').trim();
+
+  // Build PO map keyed by normalised Part No
+  var poMap = new Map();
+  var skipVals = ['fl','type/order no','make','description','item req id','section','customer',
+                  'part no','part number','timewk','request','std'];
+  function isSkip(s) {
+    if (!s) return true;
+    var sl = s.toLowerCase().trim();
+    return skipVals.some(function(sv){ return sl === sv || sl.startsWith(sv); });
+  }
+
+  for (var pi = poDR - 1; pi < poData.length; pi++) {
+    var pr = poData[pi];
+    if (!pr || !pr.some(function(v){ return v !== ''; })) continue;
+    var pt = normPN(pr[poCT]);
+    if (!pt || isSkip(pt)) continue;
+
+    var pq = pr[poCQ];
+    pq = typeof pq === 'number' ? pq : (parseFloat(String(pq||'').replace(/,/g,''))||0);
+    var up = pr[poCUP];
+    up = typeof up === 'number' ? up : (parseFloat(String(up||'').replace(/,/g,''))||0);
+    var customer = String(pr[poCCust] || '').trim();
+    var poNo     = String(pr[poCPN]   || '').trim();
+    var supplier = String(pr[poCSup]  || '').trim();
+
+    if (!poMap.has(pt)) poMap.set(pt, {customer:'', poQty:0, poNo:'', supplier:'', unitPrice:0});
+    var e = poMap.get(pt);
+    e.poQty += pq;
+    if (!e.customer  && customer)  e.customer  = customer;
+    if (!e.poNo      && poNo)      e.poNo      = poNo;
+    if (!e.supplier  && supplier)  e.supplier  = supplier;
+    if (!e.unitPrice && up > 0)    e.unitPrice = up;
+  }
+
+  // Build RFM rows
+  var rfmRows = [];
+  for (var ri = rfmDR - 1; ri < rfmData.length; ri++) {
+    var rr = rfmData[ri];
+    if (!rr || !rr.some(function(v){ return v !== ''; })) continue;
+    var rawPN = String(rr[rfmCT] !== undefined && rr[rfmCT] !== null ? rr[rfmCT] : '').trim();
+    if (!rawPN) continue;
+    var typeNoNorm = normPN(rawPN);
+
+    var retQty = rr[rfmCQ];
+    retQty = typeof retQty === 'number' ? retQty : (parseFloat(String(retQty||'').replace(/,/g,''))||0);
+
+    // Match attempts: exact → strip .0 → numeric parse
+    var poEntry = poMap.get(typeNoNorm)
+      || poMap.get(typeNoNorm.replace(/\.0+$/, ''));
+    if (!poEntry && !isNaN(typeNoNorm.replace(/[.\-]/g,''))) {
+      poEntry = poMap.get(String(parseInt(typeNoNorm)))
+             || poMap.get(String(parseFloat(typeNoNorm)));
+    }
+
+    var poQty     = poEntry ? poEntry.poQty     : 0;
+    var customer  = poEntry ? poEntry.customer  : '';
+    var poNo      = poEntry ? poEntry.poNo      : '';
+    var supplier  = poEntry ? poEntry.supplier  : '';
+    var unitPrice = poEntry ? poEntry.unitPrice : 0;
+    var usedQty       = poQty - retQty;
+    var pctReturned   = poQty > 0 ? (retQty / poQty) * 100 : 0;
+    var totalReturned = unitPrice * retQty;
+    var status = !poEntry ? 'no-po' : retQty > poQty ? 'excess' : retQty < poQty ? 'short' : 'exact';
+
+    rfmRows.push({
+      itemReqNo: String(rr[rfmCI]  || '').trim(),
+      make:      String(rr[rfmCM]  || '').trim(),
+      typeNo:    rawPN,
+      desc:      String(rr[rfmCD]  || '').trim(),
+      scope:     String(rr[rfmCSc] || '').trim(),
+      section:   String(rr[rfmCSe] || '').trim(),
+      customer, orNumber, poQty, poNo, supplier, unitPrice,
+      usedQty, returnQty:retQty, pctReturned, totalReturned, status
+    });
+  }
+
+  var total  = rfmRows.length;
+  var exact  = rfmRows.filter(function(r){return r.status==='exact';}).length;
+  var excess = rfmRows.filter(function(r){return r.status==='excess';}).length;
+  var short  = rfmRows.filter(function(r){return r.status==='short';}).length;
+  var noPo   = rfmRows.filter(function(r){return r.status==='no-po';}).length;
+
+  var projDetails = {
+    pm:         (document.getElementById('inputPM').value         || '').trim(),
+    hwTL:       (document.getElementById('inputHWTL').value       || '').trim(),
+    clientName: (document.getElementById('inputClient').value     || '').trim(),
+    orderValue: parseFloat(document.getElementById('inputOrderValue').value)  || null,
+    projCost:   parseFloat(document.getElementById('inputProjCost').value)    || null,
+    actualCost: parseFloat(document.getElementById('inputActualCost').value) || null
+  };
+
+  processedData = {rfmRows, orNumber, total, exact, excess, short, noPo, projDetails};
+  document.getElementById('processBtn').disabled = false;
+  document.getElementById('processBtn').textContent = 'Compare ›';
+  renderViz();
+  goTo(2);
+}
+
+// ── NAV ──
+function goTo(n) {
+  document.querySelectorAll('.screen').forEach(function(s,i){ s.classList.toggle('active', i===n-1); });
+  document.querySelectorAll('.step').forEach(function(s,i){
+    s.classList.remove('active','done');
+    if(i+1===n) s.classList.add('active');
+    else if(i+1<n) s.classList.add('done');
+  });
+  if (n===3) renderExportSummary();
+}
+
+// ── VIZ (Screen 2 preview table) ──
+function renderViz() {
+  var p = processedData;
+  var totalAmt = p.rfmRows.reduce(function(s,r){return s+r.totalReturned;},0);
+
+  document.getElementById('statsBar').innerHTML =
+    '<div class="stat-card"><span class="stat-icon">📋</span><div><div class="stat-val">'+p.total+'</div><div class="stat-label">Parts</div></div></div>'+
+    '<div class="stat-card"><span class="stat-icon">✅</span><div><div class="stat-val" style="color:var(--success)">'+p.exact+'</div><div class="stat-label">Matched</div></div></div>'+
+    '<div class="stat-card"><span class="stat-icon">⬆️</span><div><div class="stat-val" style="color:#0369a1">'+p.excess+'</div><div class="stat-label">More Returned</div></div></div>'+
+    '<div class="stat-card"><span class="stat-icon">⬇️</span><div><div class="stat-val" style="color:var(--danger)">'+p.short+'</div><div class="stat-label">Less Returned</div></div></div>'+
+    '<div class="stat-card"><span class="stat-icon">❓</span><div><div class="stat-val" style="color:var(--muted)">'+p.noPo+'</div><div class="stat-label">No PO</div></div></div>'+
+    (p.orNumber?'<div class="stat-card"><span class="stat-icon">🔖</span><div><div class="stat-val" style="font-size:.82rem;letter-spacing:-.02em;">'+p.orNumber+'</div><div class="stat-label">OR Number</div></div></div>':'')+
+    (totalAmt>0?'<div class="stat-card"><span class="stat-icon">💰</span><div><div class="stat-val" style="font-size:.9rem;">'+totalAmt.toFixed(0)+'</div><div class="stat-label">Total Returned</div></div></div>':'');
+
+  var html = '<div class="section-block">'
+    + '<div class="section-head"><h3>RFM Report</h3><span class="section-badge">'+p.total+' parts</span></div>'
+    + '<div style="overflow-x:auto;"><table class="viz-table"><thead><tr>'
+    + '<th>#</th><th>Item Req No</th><th>Make</th><th>Part No</th><th>Description</th>'
+    + '<th>Scope</th><th>Section</th>'
+    + '<th style="background:#0369a1;">Customer</th>'
+    + '<th style="background:#0369a1;">OR No.</th>'
+    + '<th>Proj Qty</th>'
+    + '<th style="background:#7c3aed;">PO Qty</th>'
+    + '<th>PO No.</th><th>Supplier</th>'
+    + '<th style="background:#b45309;">Used Qty</th>'
+    + '<th style="background:#15803d;">Return Qty</th>'
+    + '<th style="background:#15803d;">% Ret</th>'
+    + '<th>Unit Price</th>'
+    + '<th style="background:#1e3a5f;">Total Amt Returned</th>'
+    + '</tr></thead><tbody>';
+
+  p.rfmRows.forEach(function(r, i) {
+    var noPo = r.status === 'no-po';
+    var pctFmt   = r.poQty > 0    ? r.pctReturned.toFixed(1)+'%'  : '—';
+    var totalFmt = r.unitPrice > 0 ? r.totalReturned.toFixed(2)    : '—';
+    var usedFmt  = noPo ? '—' : r.usedQty;
+    var poFmt    = noPo ? '—' : r.poQty;
+    var upFmt    = r.unitPrice > 0 ? r.unitPrice.toFixed(2)        : '—';
+    var rowOp    = noPo ? ' style="opacity:.75;"' : '';
+    html += '<tr'+rowOp+'>'
+      + '<td style="color:var(--muted);font-size:.68rem;">'+(i+1)+'</td>'
+      + '<td class="td-mono" style="font-size:.68rem;color:var(--muted);">'+(r.itemReqNo||'—')+'</td>'
+      + '<td style="font-size:.73rem;font-weight:600;">'+(r.make||'—')+'</td>'
+      + '<td class="td-mono">'+r.typeNo+'</td>'
+      + '<td style="font-size:.72rem;max-width:200px;word-break:break-word;">'+(r.desc||'—')+'</td>'
+      + '<td class="td-center" style="font-size:.68rem;">'+(r.scope||'—')+'</td>'
+      + '<td class="td-center" style="font-size:.68rem;">'+(r.section||'—')+'</td>'
+      + '<td style="font-size:.71rem;font-weight:600;color:#0369a1;">'+(r.customer||'—')+'</td>'
+      + '<td class="td-mono td-center" style="font-size:.68rem;color:#0369a1;">'+(r.orNumber||'—')+'</td>'
+      + '<td class="td-center" style="color:var(--muted);">—</td>'
+      + '<td class="td-center" style="font-weight:700;color:#7c3aed;">'+poFmt+'</td>'
+      + '<td style="font-size:.68rem;font-family:\'IBM Plex Mono\',monospace;">'+(r.poNo||'—')+'</td>'
+      + '<td style="font-size:.68rem;">'+(r.supplier||'—')+'</td>'
+      + '<td class="td-center" style="font-weight:700;color:#b45309;">'+usedFmt+'</td>'
+      + '<td class="td-center" style="font-weight:700;color:#15803d;">'+r.returnQty+'</td>'
+      + '<td class="td-center" style="font-size:.72rem;">'+pctFmt+'</td>'
+      + '<td class="td-center" style="font-size:.72rem;">'+upFmt+'</td>'
+      + '<td class="td-center" style="font-weight:700;">'+totalFmt+'</td>'
+      + '</tr>';
+  });
+  html += '</tbody></table></div></div>';
+  document.getElementById('vizContent').innerHTML = html;
+}
+
+function renderExportSummary() {
+  var p = processedData;
+  var totalAmt = p.rfmRows.reduce(function(s,r){return s+r.totalReturned;},0);
+  document.getElementById('exportSummary').innerHTML =
+    '<div class="exp-item"><div class="exp-item-val">'+p.total+'</div><div class="exp-item-label">Parts</div></div>'+
+    '<div class="exp-item"><div class="exp-item-val" style="color:var(--danger)">'+p.short+'</div><div class="exp-item-label">Short</div></div>'+
+    '<div class="exp-item"><div class="exp-item-val" style="color:#0369a1">'+p.excess+'</div><div class="exp-item-label">Excess</div></div>'+
+    '<div class="exp-item"><div class="exp-item-val" style="font-size:.9rem;">'+totalAmt.toFixed(0)+'</div><div class="exp-item-label">Total Returned</div></div>';
+}
+
+// ── EXPORT ──
+async function exportExcel() {
+  var btn = document.getElementById('exportBtn');
+  btn.textContent = 'Generating...'; btn.disabled = true;
+  await new Promise(function(r){setTimeout(r,50);});
+
+  try {
+    var wb = new ExcelJS.Workbook();
+    var p  = processedData;
+    var pd = p.projDetails;
+
+    var C = {
+      DB:'FF1E3A5F', WW:'FFFFFFFF',
+      BL:'FF0369A1', PU:'FF7C3AED',
+      AM:'FF92400E', GR:'FF15803D',
+      GD:'FFFFE598'   // gold — Summary header fill (Book3 style)
+    };
+
+    // ══════════════════════════════════════
+    // SHEET 1 — RFM Report
+    // Row 1: OR Number | Row 2: Total Return Cost | Row 3: Headers | Row 4+: Data
+    // ══════════════════════════════════════
+    var ws = wb.addWorksheet('RFM Report');
+    [5,13,16,24,38,8,12,20,20,10,10,20,24,10,10,9,12,18]
+      .forEach(function(w,i){ ws.getColumn(i+1).width = w; });
+    ws.views = [{state:'frozen', xSplit:4, ySplit:3}];
+
+    var totalReturnCost = p.rfmRows.reduce(function(s,r){return s+r.totalReturned;},0);
+
+    // Row 1 — OR Number
+    var r1 = ws.getRow(1); r1.height = 18;
+    r1.getCell(1).value = 'OR Number';
+    r1.getCell(1).font  = {bold:true, size:9, name:'Calibri', color:{argb:C.DB}};
+    r1.getCell(1).alignment = {vertical:'middle'};
+    r1.getCell(2).value = p.orNumber || '';
+    r1.getCell(2).font  = {bold:true, size:9, name:'Calibri', color:{argb:C.BL}};
+    r1.getCell(2).alignment = {vertical:'middle'};
+
+    // Row 2 — Total Return Cost
+    var r2 = ws.getRow(2); r2.height = 18;
+    r2.getCell(1).value = 'Total Return Cost';
+    r2.getCell(1).font  = {bold:true, size:9, name:'Calibri', color:{argb:C.DB}};
+    r2.getCell(1).alignment = {vertical:'middle'};
+    r2.getCell(2).value = totalReturnCost > 0 ? parseFloat(totalReturnCost.toFixed(2)) : null;
+    r2.getCell(2).font  = {bold:true, size:9, name:'Calibri', color:{argb:C.GR}};
+    r2.getCell(2).numFmt = '#,##0.00';
+    r2.getCell(2).alignment = {vertical:'middle'};
+
+    // Row 3 — Headers
+    var hdrs = ['SR','Item Req No','Make','Part No','Description','Scope','Section',
+                'Customer','OR Number','Project Qty','PO Qty','PO No.','Supplier',
+                'Used Qty','Return Qty','% Returned','Unit Price','Total Amt Returned'];
+    var hdrBg = [C.DB,C.DB,C.DB,C.DB,C.DB, C.DB,C.DB,
+                 C.BL,C.BL,C.DB, C.PU,C.DB,C.DB,
+                 C.AM,C.GR,C.GR, C.DB,C.DB];
+    var hdrRow = ws.getRow(3); hdrRow.height = 24;
+    hdrs.forEach(function(v,i){
+      var c = hdrRow.getCell(i+1);
+      c.value = v;
+      c.font  = {bold:true, size:9, color:{argb:C.WW}, name:'Calibri'};
+      c.fill  = {type:'pattern', pattern:'solid', fgColor:{argb:hdrBg[i]}};
+      c.alignment = {vertical:'middle', horizontal:'center', wrapText:true};
+      c.border = {bottom:{style:'medium',color:{argb:'FFD1D5DB'}}, right:{style:'thin',color:{argb:'FFD1D5DB'}}};
+    });
+
+    // Rows 4+ — Data
+    p.rfmRows.forEach(function(r, ri) {
+      var dr   = ws.addRow([]); dr.height = 17;
+      var noPo = r.status === 'no-po';
+      var rbg  = ri%2===0 ? 'FFFFFFFF' : 'FFF8FAFC';
+      var pctVal   = r.poQty > 0    ? parseFloat(r.pctReturned.toFixed(2))    : null;
+      var totalVal = r.unitPrice > 0 ? parseFloat(r.totalReturned.toFixed(2)) : null;
+      var upVal    = r.unitPrice > 0 ? parseFloat(r.unitPrice.toFixed(2))     : null;
+      var vals = [ri+1, r.itemReqNo||'', r.make||'', r.typeNo, r.desc||'',
+                  r.scope||'', r.section||'', r.customer||'', r.orNumber||'', null,
+                  noPo?null:r.poQty, r.poNo||'', r.supplier||'',
+                  noPo?null:r.usedQty, r.returnQty, pctVal, upVal, totalVal];
+      vals.forEach(function(v, ci) {
+        var c = dr.getCell(ci+1);
+        c.fill  = {type:'pattern', pattern:'solid', fgColor:{argb:rbg}};
+        c.value = (v===''||v===undefined||v===null) ? null : v;
+        var fg = 'FF1F2937';
+        if (ci===3)  fg = C.DB;
+        if (ci===7)  fg = C.BL;
+        if (ci===8)  fg = C.BL;
+        if (ci===10) fg = C.PU;
+        if (ci===13) fg = C.AM;
+        if (ci===14) fg = C.GR;
+        if (ci===15) fg = C.GR;
+        c.font      = {size:9, name:ci===3?'Courier New':'Calibri',
+                       bold:(ci===3||ci===10||ci===13||ci===14||ci===17),
+                       color:{argb:fg}};
+        c.alignment = {vertical:'middle',
+                       horizontal:(ci===0||ci===8||ci===9||ci===10||ci===13||ci===14||ci===15||ci===16||ci===17)?'center':'left',
+                       wrapText:ci===4};
+        if (ci===15 && v!==null) c.numFmt = '0.00"%"';
+        if ((ci===16||ci===17) && v!==null) c.numFmt = '#,##0.00';
+        c.border = {bottom:{style:'thin',color:{argb:'FFE5E7EB'}}, right:{style:'thin',color:{argb:'FFE5E7EB'}}};
+      });
+    });
+    if (!p.rfmRows.length) {
+      ws.addRow(['No RFM data found']).getCell(1).font = {italic:true, size:9, color:{argb:'FF64748B'}};
+    }
+
+    // ══════════════════════════════════════
+    // SHEET 2 — Summary (Book3 gold style)
+    // ══════════════════════════════════════
+    var ws2 = wb.addWorksheet('Summary');
+    var sumCols = [
+      {r1:'Sr No',                      r2:null,                             w:8,  m:true},
+      {r1:'PM',                          r2:null,                             w:16, m:true},
+      {r1:'HW TL',                       r2:null,                             w:16, m:true},
+      {r1:'Client name',                 r2:null,                             w:20, m:true},
+      {r1:'Order ID',                    r2:null,                             w:18, m:true},
+      {r1:'Order Value',                 r2:null,                             w:16, m:true},
+      {r1:'Projected Material Cost',     r2:null,                             w:22, m:true},
+      {r1:'Actual Material Cost',        r2:null,                             w:22, m:true},
+      {r1:'% age Act Material cost',     r2:'wrt to Projected Material Cost', w:22, m:false},
+      {r1:'Mfg. Return Material Cost',   r2:null,                             w:24, m:true},
+      {r1:'% age Return Material Cost',  r2:'wrt to Actual Material Cost',    w:22, m:false},
+      {r1:'% age Return Material Cost',  r2:'wrt to Projected Material Cost', w:22, m:false},
+      {r1:'% age Return Material Cost',  r2:'wrt to Order Value',             w:22, m:false},
+      {r1:'Remarks',                     r2:null,                             w:20, m:true}
+    ];
+    sumCols.forEach(function(col,i){ ws2.getColumn(i+1).width = col.w; });
+    ws2.views = [{state:'frozen', xSplit:0, ySplit:2}];
+
+    function hdrS(cell) {
+      cell.font      = {bold:true, size:11, name:'Calibri', color:{argb:'FF000000'}};
+      cell.fill      = {type:'pattern', pattern:'solid', fgColor:{argb:C.GD}};
+      cell.alignment = {horizontal:'center', vertical:'middle', wrapText:true};
+      cell.border    = {top:{style:'thin',color:{argb:'FF000000'}},bottom:{style:'thin',color:{argb:'FF000000'}},
+                        left:{style:'thin',color:{argb:'FF000000'}},right:{style:'thin',color:{argb:'FF000000'}}};
+    }
+    var sh1 = ws2.getRow(1); sh1.height = 32;
+    var sh2 = ws2.getRow(2); sh2.height = 32;
+    sumCols.forEach(function(col,i){
+      var c1 = sh1.getCell(i+1); c1.value = col.r1; hdrS(c1);
+      if (col.m) {
+        ws2.mergeCells(1, i+1, 2, i+1);
+      } else {
+        var c2 = sh2.getCell(i+1); c2.value = col.r2; hdrS(c2);
+      }
+    });
+
+    // Data row 3
+    var ov  = pd.orderValue || null;
+    var pc  = pd.projCost   || null;
+    var ac  = pd.actualCost || null;
+    var mrc = totalReturnCost > 0 ? parseFloat(totalReturnCost.toFixed(2)) : null;
+    var pctActWrtProj  = (ac && pc && pc>0)  ? parseFloat((ac  / pc  * 100).toFixed(2)) : null;
+    var pctRetWrtAct   = (mrc && ac && ac>0) ? parseFloat((mrc / ac  * 100).toFixed(2)) : null;
+    var pctRetWrtProj  = (mrc && pc && pc>0) ? parseFloat((mrc / pc  * 100).toFixed(2)) : null;
+    var pctRetWrtOrder = (mrc && ov && ov>0) ? parseFloat((mrc / ov  * 100).toFixed(2)) : null;
+    var sumVals = [1, pd.pm||'', pd.hwTL||'', pd.clientName||'', p.orNumber||'',
+                   ov, pc, ac, pctActWrtProj, mrc,
+                   pctRetWrtAct, pctRetWrtProj, pctRetWrtOrder, ''];
+    var dr3 = ws2.getRow(3); dr3.height = 20;
+    sumVals.forEach(function(v,i){
+      var c = dr3.getCell(i+1);
+      c.value = (v===null||v==='') ? null : v;
+      c.font  = {size:11, name:'Calibri', color:{argb:'FF1F2937'}};
+      c.alignment = {vertical:'middle', horizontal:(i===0||i>=5)?'center':'left'};
+      c.border = {top:{style:'thin',color:{argb:'FFCCCCCC'}},bottom:{style:'thin',color:{argb:'FFCCCCCC'}},
+                  left:{style:'thin',color:{argb:'FFCCCCCC'}},right:{style:'thin',color:{argb:'FFCCCCCC'}}};
+      if ((i===5||i===6||i===7||i===9) && v!==null) c.numFmt = '#,##0.00';
+      if ((i===8||i===10||i===11||i===12) && v!==null) c.numFmt = '0.00"%"';
+    });
+
+    var buffer = await wb.xlsx.writeBuffer();
+    var blob   = new Blob([buffer], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+    var fname  = (document.getElementById('exportFileName').value||'RFM_Report').trim().replace(/[^a-zA-Z0-9_\-. ]/g,'_');
+    saveAs(blob, fname + '.xlsx');
+
+    btn.textContent = '↓ Download Excel'; btn.disabled = false;
+  } catch(err) {
+    console.error(err);
+    alert('Export failed: ' + err.message);
+    btn.textContent = '↓ Download Excel'; btn.disabled = false;
+  }
+}
+
+
+// ── DARK MODE ──
+function toggleDark(){
+  var isDark = document.body.classList.toggle('dark');
+  document.getElementById('darkIcon').textContent  = isDark ? '☀️' : '🌙';
+  document.getElementById('darkLabel').textContent = isDark ? 'Light Mode' : 'Dark Mode';
+  try { localStorage.setItem('wz-theme', isDark?'dark':'light'); } catch(e){}
+}
+
+// ── INIT ──
+(function(){
+  try {
+    var t = localStorage.getItem('wz-theme');
+    if (t==='dark'){
+      document.body.classList.add('dark');
+      document.getElementById('darkIcon').textContent  = '☀️';
+      document.getElementById('darkLabel').textContent = 'Light Mode';
+    }
+  } catch(e){}
+  loadSettings();
+})();
+</script>
+</body>
+</html>
